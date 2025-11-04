@@ -9,7 +9,7 @@ export default function NavBar() {
         <div className="flex flex-row items-center gap-4">
           <div>
             <p className="text-xl font-semibold text-black">
-            CU Anschutz School of Dental Medicine
+            Clint Carlson Live AI Avatars
             </p>
           </div>
         </div>

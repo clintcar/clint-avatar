@@ -16,8 +16,8 @@ const fontMono = FontMono({
 
 export const metadata: Metadata = {
   title: {
-    default: "University of Colorado, School of Dental Medicine",
-    template: `%s - University of Colorado, School of Dental Medicine`,
+    default: "Clint Carlson Live AI Avatars",
+    template: `%s - Clint Carlson Live AI Avatars`,
   },
   icons: {
     icon: "/heygen-logo.png",
