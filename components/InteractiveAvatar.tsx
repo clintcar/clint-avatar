@@ -49,6 +49,17 @@ function InteractiveAvatar() {
   const [config, setConfig] = useState<StartAvatarRequest>(DEFAULT_CONFIG);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [timerDuration, setTimerDuration] = useState<number | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
+    // Load from localStorage on mount
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('avatarBackgroundImage');
+      return saved || null;
+    }
+    return null;
+  });
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const mediaStream = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,6 +74,21 @@ function InteractiveAvatar() {
     } catch (err) {
       console.error("Fullscreen toggle failed", err);
     }
+  });
+
+  const exitFullscreenIfActive = useMemoizedFn(async () => {
+    if (document.fullscreenElement) {
+      try {
+        await document.exitFullscreen();
+      } catch (err) {
+        console.error("Failed to exit fullscreen", err);
+      }
+    }
+  });
+
+  const stopAvatarAndExitFullscreen = useMemoizedFn(async () => {
+    await exitFullscreenIfActive();
+    stopAvatar();
   });
 
   async function fetchAccessToken() {
@@ -137,8 +163,68 @@ function InteractiveAvatar() {
   });
 
   useUnmount(() => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+    }
     stopAvatar();
   });
+
+  // Reset timer when session stops, start timer when session connects
+  useEffect(() => {
+    if (sessionState === StreamingAvatarSessionState.INACTIVE) {
+      setTimeRemaining(null);
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    } else if (sessionState === StreamingAvatarSessionState.CONNECTED && timerDuration !== null && timerDuration > 0 && timeRemaining === null) {
+      // Start timer when session becomes connected
+      setTimeRemaining(timerDuration * 60); // Convert minutes to seconds
+    }
+  }, [sessionState, timerDuration]);
+
+  // Timer countdown effect
+  useEffect(() => {
+    if (timeRemaining === null || sessionState !== StreamingAvatarSessionState.CONNECTED) {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+      return;
+    }
+
+    if (timeRemaining <= 0) {
+      // Timer reached 0, stop the session and exit fullscreen
+      stopAvatarAndExitFullscreen();
+      setTimeRemaining(null);
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+      return;
+    }
+
+    // Start countdown
+    timerIntervalRef.current = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev === null || prev <= 0) {
+          if (timerIntervalRef.current) {
+            clearInterval(timerIntervalRef.current);
+            timerIntervalRef.current = null;
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    };
+  }, [timeRemaining, sessionState, stopAvatar]);
 
   useEffect(() => {
     if (stream && mediaStream.current) {
@@ -158,11 +244,17 @@ function InteractiveAvatar() {
             <Button onClick={() => startSessionV2(false)}>Start Text Chat</Button>
           </div>
         )}
-        <div ref={containerRef} className="relative w-full aspect-video overflow-hidden flex flex-col items-center justify-center">
+        <div ref={containerRef} className="relative w-full aspect-video overflow-hidden flex flex-col items-center justify-center bg-black">
           {sessionState !== StreamingAvatarSessionState.INACTIVE ? (
-            <AvatarVideo ref={mediaStream} />
+            <AvatarVideo ref={mediaStream} timeRemaining={timeRemaining} />
           ) : (
-            <></>
+            backgroundImage && (
+              <img
+                src={backgroundImage}
+                alt="Background"
+                className="w-full h-full object-cover"
+              />
+            )
           )}
           {/* <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-6 py-2 rounded-md text-lg font-medium">
             María Teresa Fuster
@@ -191,7 +283,24 @@ function InteractiveAvatar() {
             </div>
             {isSettingsOpen && (
               <div className="p-4">
-                <AvatarConfig config={config} onConfigChange={setConfig} />
+                <AvatarConfig 
+                  config={config} 
+                  onConfigChange={setConfig}
+                  timerDuration={timerDuration}
+                  onTimerDurationChange={setTimerDuration}
+                  backgroundImage={backgroundImage}
+                  onBackgroundImageChange={(image) => {
+                    setBackgroundImage(image);
+                    // Save to localStorage
+                    if (typeof window !== 'undefined') {
+                      if (image) {
+                        localStorage.setItem('avatarBackgroundImage', image);
+                      } else {
+                        localStorage.removeItem('avatarBackgroundImage');
+                      }
+                    }
+                  }}
+                />
               </div>
             )}
           </div>

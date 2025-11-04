@@ -18,11 +18,19 @@ import { AVATARS, STT_LANGUAGE_LIST } from "@/app/lib/constants";
 interface AvatarConfigProps {
   onConfigChange: (config: StartAvatarRequest) => void;
   config: StartAvatarRequest;
+  timerDuration: number | null;
+  onTimerDurationChange: (duration: number | null) => void;
+  backgroundImage: string | null;
+  onBackgroundImageChange: (image: string | null) => void;
 }
 
 export const AvatarConfig: React.FC<AvatarConfigProps> = ({
   onConfigChange,
   config,
+  timerDuration,
+  onTimerDurationChange,
+  backgroundImage,
+  onBackgroundImageChange,
 }) => {
   const onChange = <T extends keyof StartAvatarRequest>(
     key: T,
@@ -31,6 +39,8 @@ export const AvatarConfig: React.FC<AvatarConfigProps> = ({
     onConfigChange({ ...config, [key]: value });
   };
   const [showMore, setShowMore] = useState<boolean>(true);
+  const [isCustomTimer, setIsCustomTimer] = useState<boolean>(false);
+  const [customTimerValue, setCustomTimerValue] = useState<string>("");
 
   const selectedAvatar = useMemo(() => {
     const avatar = AVATARS.find(
@@ -52,8 +62,102 @@ export const AvatarConfig: React.FC<AvatarConfigProps> = ({
     }
   }, [config.avatarName]);
 
+  const timerOptions = [5, 10, 15, 20, "CUSTOM"];
+
+  const getTimerDisplayValue = () => {
+    if (isCustomTimer) return "Custom";
+    if (timerDuration === null) return null;
+    return `${timerDuration} minutes`;
+  };
+
+  const handleTimerSelect = (option: number | string) => {
+    if (option === "CUSTOM") {
+      setIsCustomTimer(true);
+      onTimerDurationChange(null);
+    } else {
+      setIsCustomTimer(false);
+      setCustomTimerValue("");
+      onTimerDurationChange(option as number);
+    }
+  };
+
+  const handleCustomTimerChange = (value: string) => {
+    setCustomTimerValue(value);
+    const numValue = parseInt(value, 10);
+    if (!isNaN(numValue) && numValue > 0) {
+      onTimerDurationChange(numValue);
+    } else {
+      onTimerDurationChange(null);
+    }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onBackgroundImageChange(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    onBackgroundImageChange(null);
+  };
+
   return (
     <div className="relative flex flex-col gap-4 w-[550px] py-8 max-h-full overflow-y-auto px-4">
+      <Field label="Background Image (shown when inactive)">
+        <div className="flex flex-col gap-2">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="w-full text-white text-sm bg-zinc-700 py-2 px-6 rounded-lg outline-none cursor-pointer file:mr-4 file:py-1 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-zinc-600 file:text-white hover:file:bg-zinc-500"
+          />
+          {backgroundImage && (
+            <div className="relative">
+              <img
+                src={backgroundImage}
+                alt="Background preview"
+                className="w-full h-32 object-cover rounded-lg"
+              />
+              <button
+                onClick={handleRemoveImage}
+                className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+        </div>
+      </Field>
+      <Field label="Session Duration">
+        <Select
+          isSelected={(option) => {
+            if (option === "CUSTOM") return isCustomTimer;
+            return !isCustomTimer && timerDuration === option;
+          }}
+          options={timerOptions}
+          placeholder="Select duration"
+          renderOption={(option) => {
+            return option === "CUSTOM" ? "Custom" : `${option} minutes`;
+          }}
+          value={getTimerDisplayValue()}
+          onSelect={(option) => handleTimerSelect(option)}
+        />
+      </Field>
+      {isCustomTimer && (
+        <Field label="Custom Duration (minutes)">
+          <Input
+            placeholder="Enter minutes"
+            value={customTimerValue}
+            onChange={handleCustomTimerChange}
+            type="number"
+          />
+        </Field>
+      )}
       <Field label="Custom Knowledge Base ID">
         <Input
           placeholder="Enter custom knowledge base ID"

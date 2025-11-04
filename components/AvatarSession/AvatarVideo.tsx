@@ -7,7 +7,11 @@ import { StreamingAvatarSessionState } from "../logic";
 import { CloseIcon } from "../Icons";
 import { Button } from "../Button";
 
-export const AvatarVideo = forwardRef<HTMLVideoElement>(({}, ref) => {
+interface AvatarVideoProps {
+  timeRemaining?: number | null;
+}
+
+export const AvatarVideo = forwardRef<HTMLVideoElement, AvatarVideoProps>(({ timeRemaining = null }, ref) => {
   const { sessionState, stopAvatar } = useStreamingAvatarSession();
   const { connectionQuality } = useConnectionQuality();
 
@@ -26,6 +30,11 @@ export const AvatarVideo = forwardRef<HTMLVideoElement>(({}, ref) => {
 
   return (
     <>
+      {timeRemaining !== null && timeRemaining > 0 && (
+        <div className="absolute bottom-16 left-3 bg-black text-white rounded-lg px-3 py-2 text-sm">
+          Time remaining: {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
+        </div>
+      )}
       {connectionQuality !== ConnectionQuality.UNKNOWN && (
         <div className="absolute bottom-3 left-3 bg-black text-white rounded-lg px-3 py-2 text-sm">
           Connection Quality: {connectionQuality}
@@ -34,7 +43,7 @@ export const AvatarVideo = forwardRef<HTMLVideoElement>(({}, ref) => {
       {isLoaded && (
         <Button
           className="absolute top-3 right-3 !p-2 bg-zinc-700 bg-opacity-50 z-10"
-          onClick={stopAvatar}
+          onClick={handleClose}
         >
           <CloseIcon />
         </Button>
