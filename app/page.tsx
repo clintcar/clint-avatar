@@ -8,6 +8,16 @@ export default function App() {
         <div className="w-full">
           <InteractiveAvatar />
         </div>
+        <div className="w-full flex justify-end">
+          <a
+            href="https://www.linkedin.com/in/clintcarlson/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-black hover:text-zinc-600 text-sm font-medium transition-colors"
+          >
+            Contact
+          </a>
+        </div>
       </div>
     </div>
   );
