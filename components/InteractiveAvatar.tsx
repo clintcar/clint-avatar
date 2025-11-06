@@ -18,7 +18,7 @@ import { AvatarControls } from "./AvatarSession/AvatarControls";
 import { useVoiceChat } from "./logic/useVoiceChat";
 import { useTextChat } from "./logic/useTextChat";
 import { StreamingAvatarProvider, StreamingAvatarSessionState } from "./logic";
-import { LoadingIcon } from "./Icons";
+import { LoadingIcon, FullscreenIcon } from "./Icons";
 import { MessageHistory } from "./AvatarSession/MessageHistory";
 
 import { AVATARS } from "@/app/lib/constants";
@@ -245,15 +245,22 @@ function InteractiveAvatar() {
           </div>
         )}
         <div ref={containerRef} className="relative w-full aspect-video overflow-hidden flex flex-col items-center justify-center bg-black">
-          {sessionState !== StreamingAvatarSessionState.INACTIVE ? (
+          {sessionState === StreamingAvatarSessionState.CONNECTED ? (
             <AvatarVideo ref={mediaStream} timeRemaining={timeRemaining} />
           ) : (
             backgroundImage && (
-              <img
-                src={backgroundImage}
-                alt="Background"
-                className="w-full h-full object-cover"
-              />
+              <>
+                <img
+                  src={backgroundImage}
+                  alt="Background"
+                  className="w-full h-full object-cover"
+                />
+                {sessionState === StreamingAvatarSessionState.CONNECTING && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                    <LoadingIcon />
+                  </div>
+                )}
+              </>
             )
           )}
           {/* <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-6 py-2 rounded-md text-lg font-medium">
@@ -262,9 +269,9 @@ function InteractiveAvatar() {
           <button
             aria-label="Toggle Full Screen"
             onClick={toggleFullscreen}
-            className="absolute bottom-4 right-4 bg-zinc-900 text-white px-3 py-1 rounded-md text-sm"
+            className="absolute bottom-4 right-4 bg-zinc-900 text-white p-2 rounded-md"
           >
-            Full Screen
+            <FullscreenIcon size={20} />
           </button>
           {sessionState === StreamingAvatarSessionState.CONNECTED && (
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">

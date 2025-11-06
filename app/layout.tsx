@@ -42,7 +42,7 @@ export default function RootLayout({
     >
       <head />
       <body className="min-h-screen bg-white text-black">
-        <main className="relative flex flex-col gap-6 h-screen w-screen">
+        <main className="relative flex flex-col gap-2 h-screen w-screen">
           <NavBar />
           {children}
         </main>
