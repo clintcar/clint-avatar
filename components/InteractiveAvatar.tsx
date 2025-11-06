@@ -52,12 +52,12 @@ function InteractiveAvatar() {
   const [timerDuration, setTimerDuration] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
-    // Load from localStorage on mount
+    // Load from localStorage on mount, or use default
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('avatarBackgroundImage');
-      return saved || null;
+      return saved || '/judy-background.jpg';
     }
-    return null;
+    return '/judy-background.jpg';
   });
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
