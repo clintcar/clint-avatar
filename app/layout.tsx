@@ -16,8 +16,8 @@ const fontMono = FontMono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Clint Carlson Live AI Avatars",
-    template: `%s - Clint Carlson Live AI Avatars`,
+    default: "Live AI Avatar - Meet Judy | Author: Clint Carlson",
+    template: `%s - Live AI Avatar - Meet Judy`,
   },
   icons: {
     icon: "/heygen-logo.png",

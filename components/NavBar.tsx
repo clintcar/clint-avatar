@@ -7,13 +7,15 @@ export default function NavBar() {
     <>
       <div className="flex flex-row justify-between items-center w-[1000px] m-auto p-6">
         <div className="flex flex-row items-center gap-4">
-          <div>
-            <p className="text-xl font-semibold text-black">
-            Clint Carlson Live AI Avatars
-            </p>
-          </div>
+          <p className="text-xl font-semibold text-black">
+            Live AI Avatar - Meet Judy
+          </p>
         </div>
-        {/* Right-side links are intentionally hidden */}
+        <div>
+          <p className="text-xl font-semibold text-black">
+            Author: Clint Carlson
+          </p>
+        </div>
       </div>
     </>
   );
