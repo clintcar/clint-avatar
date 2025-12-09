@@ -51,6 +51,9 @@ importers:
 
   apps/demo:
     dependencies:
+      '@heygen/liveavatar-web-sdk':
+        specifier: '*'
+        version: 0.0.9(@types/dom-mediacapture-record@1.0.22)
       next:
         specifier: ^15.4.2
         version: 15.4.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -61,9 +64,6 @@ importers:
         specifier: ^19.1.0
         version: 19.1.0(react@19.1.0)
     devDependencies:
-      '@heygen/liveavatar-web-sdk':
-        specifier: workspace:*
-        version: link:../../packages/js-sdk
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
@@ -432,6 +432,9 @@ packages:
 
   '@gerrit0/mini-shiki@3.12.2':
     resolution: {integrity: sha512-HKZPmO8OSSAAo20H2B3xgJdxZaLTwtlMwxg0967scnrDlPwe6j5+ULGHyIqwgTbFCn9yv/ff8CmfWZLE9YKBzA==}
+
+  '@heygen/liveavatar-web-sdk@0.0.9':
+    resolution: {integrity: sha512-ZY4KSFiIs/Z3uxt2yHc1TeCKHojy4o7r6gL073wT80BrrWx5lsqLyhgkZ8H2l7UTVNCXDGO7aiIHf0QQKyWg9Q==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2675,6 +2678,15 @@ snapshots:
       '@shikijs/themes': 3.12.2
       '@shikijs/types': 3.12.2
       '@shikijs/vscode-textmate': 10.0.2
+
+  '@heygen/liveavatar-web-sdk@0.0.9(@types/dom-mediacapture-record@1.0.22)':
+    dependencies:
+      events: 3.3.0
+      livekit-client: 2.15.7(@types/dom-mediacapture-record@1.0.22)
+      typed-emitter: 2.1.0
+      webrtc-issue-detector: 1.16.3
+    transitivePeerDependencies:
+      - '@types/dom-mediacapture-record'
 
   '@humanfs/core@0.19.1': {}
 

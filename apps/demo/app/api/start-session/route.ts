@@ -1,16 +1,27 @@
-import {
-  API_KEY,
-  API_URL,
-  AVATAR_ID,
-  VOICE_ID,
-  CONTEXT_ID,
-  LANGUAGE,
-} from "../secrets";
+import { API_KEY, API_URL, AVATAR_ID, CONTEXT_ID, LANGUAGE } from "../secrets";
 
-export async function POST() {
+export async function POST(request: Request) {
   let session_token = "";
   let session_id = "";
   try {
+    const body = await request.json().catch(() => ({}));
+    const avatarId = body.avatar_id || AVATAR_ID;
+    const language = body.language || LANGUAGE;
+    const emotion = body.emotion;
+
+    const avatarPersona: {
+      context_id: string;
+      language: string;
+      emotion?: string;
+    } = {
+      context_id: CONTEXT_ID,
+      language: language,
+    };
+
+    if (emotion) {
+      avatarPersona.emotion = emotion;
+    }
+
     const res = await fetch(`${API_URL}/v1/sessions/token`, {
       method: "POST",
       headers: {
@@ -19,12 +30,8 @@ export async function POST() {
       },
       body: JSON.stringify({
         mode: "FULL",
-        avatar_id: AVATAR_ID,
-        avatar_persona: {
-          voice_id: VOICE_ID,
-          context_id: CONTEXT_ID,
-          language: LANGUAGE,
-        },
+        avatar_id: avatarId,
+        avatar_persona: avatarPersona,
       }),
     });
     if (!res.ok) {

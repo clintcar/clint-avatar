@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LiveAvatarSession } from "./LiveAvatarSession";
 
 export const LiveAvatarDemo = () => {
@@ -8,10 +8,18 @@ export const LiveAvatarDemo = () => {
   const [mode, setMode] = useState<"FULL" | "CUSTOM">("FULL");
   const [error, setError] = useState<string | null>(null);
 
-  const handleStart = async () => {
+  const handleStart = async (config?: {
+    avatar_id?: string;
+    language?: string;
+    emotion?: string;
+  }) => {
     try {
       const res = await fetch("/api/start-session", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(config || {}),
       });
       if (!res.ok) {
         const error = await res.json();
@@ -21,6 +29,7 @@ export const LiveAvatarDemo = () => {
       const { session_token } = await res.json();
       setSessionToken(session_token);
       setMode("FULL");
+      setError(null);
     } catch (error: unknown) {
       setError((error as Error).message);
     }
@@ -44,6 +53,41 @@ export const LiveAvatarDemo = () => {
     // Reset the FE state
     setSessionToken("");
   };
+
+  const onRestartSession = (config?: {
+    avatar_id?: string;
+    language?: string;
+    emotion?: string;
+  }) => {
+    // Automatically restart the Full Avatar Session with config
+    handleStart(config);
+  };
+
+  // Auto-start Full Avatar Session on page load
+  useEffect(() => {
+    if (!sessionToken) {
+      // Read saved settings from localStorage
+      const savedLanguage =
+        typeof window !== "undefined"
+          ? localStorage.getItem("avatarLanguage")
+          : null;
+      const savedEmotion =
+        typeof window !== "undefined"
+          ? localStorage.getItem("avatarEmotion")
+          : null;
+      const savedAvatarId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("avatarIdOverride")
+          : null;
+
+      handleStart({
+        language: savedLanguage || undefined,
+        emotion: savedEmotion || undefined,
+        avatar_id: savedAvatarId || undefined,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center gap-4">
@@ -73,6 +117,7 @@ export const LiveAvatarDemo = () => {
           mode={mode}
           sessionAccessToken={sessionToken}
           onSessionStopped={onSessionStopped}
+          onRestartSession={onRestartSession}
         />
       )}
     </div>

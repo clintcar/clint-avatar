@@ -7,4 +7,5 @@ export interface LiveAvatarSessionMessage {
   sender: MessageSender;
   message: string;
   timestamp: number;
+  id?: string;
 }

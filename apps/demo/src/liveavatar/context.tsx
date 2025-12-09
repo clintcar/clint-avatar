@@ -8,7 +8,7 @@ import {
   VoiceChatState,
   AgentEventsEnum,
 } from "@heygen/liveavatar-web-sdk";
-import { LiveAvatarSessionMessage } from "./types";
+import { LiveAvatarSessionMessage, MessageSender } from "./types";
 import { API_URL } from "../../app/api/secrets";
 
 type LiveAvatarContextProps = {
@@ -126,53 +126,69 @@ const useTalkingState = (sessionRef: React.RefObject<LiveAvatarSession>) => {
   return { isUserTalking, isAvatarTalking };
 };
 
-// const useChatHistoryState = (
-//   sessionRef: React.RefObject<LiveAvatarSession>
-// ) => {
-//   const [messages, setMessages] = useState<LiveAvatarSessionMessage[]>([]);
-//   const currentSenderRef = useRef<MessageSender | null>(null);
+const useChatHistoryState = (
+  sessionRef: React.RefObject<LiveAvatarSession>,
+) => {
+  const [messages, setMessages] = useState<LiveAvatarSessionMessage[]>([]);
 
-//   // useEffect(() => {
-//   //   if (sessionRef.current) {
-//   //     const handleMessage = (
-//   //       sender: MessageSender,
-//   //       { task_id, message }: { task_id: string; message: string }
-//   //     ) => {
-//   //       if (currentSenderRef.current === sender) {
-//   //         setMessages((prev) => [
-//   //           ...prev.slice(0, -1),
-//   //           {
-//   //             ...prev[prev.length - 1]!,
-//   //             message: [prev[prev.length - 1]!.message, message].join(""),
-//   //           },
-//   //         ]);
-//   //       } else {
-//   //         currentSenderRef.current = sender;
-//   //         setMessages((prev) => [
-//   //           ...prev,
-//   //           {
-//   //             id: task_id,
-//   //             sender: sender,
-//   //             message,
-//   //             timestamp: Date.now(),
-//   //           },
-//   //         ]);
-//   //       }
-//   //     };
+  useEffect(() => {
+    if (sessionRef.current) {
+      const handleUserTranscription = (event: {
+        event_id: string;
+        text: string;
+      }) => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            sender: MessageSender.USER,
+            message: event.text,
+            timestamp: Date.now(),
+            id: event.event_id,
+          },
+        ]);
+      };
 
-//   //     sessionRef.current.on(
-//   //       AgentEventsEnum.USER_SPEAK_STARTED,
-//   //       (data) => console.log("USER_SPEAK_STARTED", data)
-//   //       handleMessage(MessageSender.USER, {
-//   //   task_id: data.,
-//   //   message: data.text || "",
-//   // })
-//   //     );
-//   //   }
-//   // }, [sessionRef]);
+      const handleAvatarTranscription = (event: {
+        event_id: string;
+        text: string;
+      }) => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            sender: MessageSender.AVATAR,
+            message: event.text,
+            timestamp: Date.now(),
+            id: event.event_id,
+          },
+        ]);
+      };
 
-//   return { messages };
-// };
+      sessionRef.current.on(
+        AgentEventsEnum.USER_TRANSCRIPTION,
+        handleUserTranscription,
+      );
+      sessionRef.current.on(
+        AgentEventsEnum.AVATAR_TRANSCRIPTION,
+        handleAvatarTranscription,
+      );
+
+      return () => {
+        if (sessionRef.current) {
+          sessionRef.current.off(
+            AgentEventsEnum.USER_TRANSCRIPTION,
+            handleUserTranscription,
+          );
+          sessionRef.current.off(
+            AgentEventsEnum.AVATAR_TRANSCRIPTION,
+            handleAvatarTranscription,
+          );
+        }
+      };
+    }
+  }, [sessionRef]);
+
+  return { messages };
+};
 
 export const LiveAvatarContextProvider = ({
   children,
@@ -192,7 +208,7 @@ export const LiveAvatarContextProvider = ({
 
   const { isMuted, voiceChatState } = useVoiceChatState(sessionRef);
   const { isUserTalking, isAvatarTalking } = useTalkingState(sessionRef);
-  // const { messages } = useChatHistoryState(sessionRef);
+  const { messages } = useChatHistoryState(sessionRef);
 
   return (
     <LiveAvatarContext.Provider
@@ -205,7 +221,7 @@ export const LiveAvatarContextProvider = ({
         voiceChatState,
         isUserTalking,
         isAvatarTalking,
-        messages: [], // TODO - properly implement chat history
+        messages,
       }}
     >
       {children}
