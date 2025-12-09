@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm install --frozen-lockfile && pnpm turbo build --filter=demo",
+  "buildCommand": "pnpm turbo build --filter=demo",
   "outputDirectory": "apps/demo/.next",
   "devCommand": "cd apps/demo && pnpm run dev",
   "installCommand": "pnpm install --frozen-lockfile",
