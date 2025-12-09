@@ -1,5 +1,7 @@
 # Live Avatar Demo - Enhanced Features
 
+Updated build configuration.
+
 This is an enhanced Next.js demo project for HeyGen Live Avatar with additional features including:
 
 - Message history tracking
