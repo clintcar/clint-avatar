@@ -1,0 +1,7 @@
+{
+  "buildCommand": "pnpm turbo build --filter=sdm_mental_health_avatar_02",
+  "outputDirectory": ".next",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs"
+}
