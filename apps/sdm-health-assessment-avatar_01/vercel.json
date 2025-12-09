@@ -1,0 +1,7 @@
+{
+  "buildCommand": "pnpm turbo build --filter=sdm-health-assessment-avatar_01",
+  "outputDirectory": ".next",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs"
+}
