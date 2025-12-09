@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm install && pnpm --filter=@heygen/liveavatar-web-sdk build && cd apps/demo && pnpm run build",
+  "buildCommand": "pnpm install && pnpm turbo build --filter=demo",
   "outputDirectory": "apps/demo/.next",
   "devCommand": "cd apps/demo && pnpm run dev",
   "installCommand": "pnpm install",
