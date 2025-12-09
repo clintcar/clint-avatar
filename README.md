@@ -16,6 +16,7 @@ This is an enhanced Next.js demo project for HeyGen Live Avatar with additional 
 ## Getting Started
 
 1. Install dependencies:
+
 ```bash
 npm install
 # or
@@ -29,6 +30,7 @@ pnpm install
    - Optionally configure `ELEVENLABS_API_KEY` and `OPENAI_API_KEY` for custom mode
 
 3. Run the development server:
+
 ```bash
 npm run dev
 # or
@@ -48,6 +50,7 @@ pnpm dev
 ## Deployment
 
 This project can be deployed to Vercel. If using a monorepo structure, configure Vercel with:
+
 - Root Directory: `apps/demo`
 - Build Command: `npm run build` (from the demo directory)
 - Output Directory: `.next`
