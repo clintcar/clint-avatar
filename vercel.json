@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm install && pnpm build --filter=demo",
+  "buildCommand": "pnpm install && pnpm run build --filter=demo",
   "outputDirectory": "apps/demo/.next",
   "devCommand": "cd apps/demo && pnpm run dev",
   "installCommand": "pnpm install",
