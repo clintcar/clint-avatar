@@ -1,0 +1,8 @@
+{
+  "buildCommand": "pnpm turbo build --filter=menopause01",
+  "outputDirectory": ".next",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs"
+}
+
