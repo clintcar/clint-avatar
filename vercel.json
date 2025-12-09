@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm install && pnpm run build --filter=demo",
+  "buildCommand": "pnpm install && cd packages/js-sdk && pnpm build && cd ../../apps/demo && pnpm build",
   "outputDirectory": "apps/demo/.next",
   "devCommand": "cd apps/demo && pnpm run dev",
   "installCommand": "pnpm install",
