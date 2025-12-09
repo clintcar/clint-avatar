@@ -211,7 +211,7 @@ export const AvatarConfig: React.FC<AvatarConfigProps> = ({
       <Field label="Emotion">
         <Select
           isSelected={(option) => option === emotion}
-          options={VOICE_EMOTIONS}
+          options={[...VOICE_EMOTIONS]}
           renderOption={(option) =>
             option.charAt(0).toUpperCase() + option.slice(1)
           }
