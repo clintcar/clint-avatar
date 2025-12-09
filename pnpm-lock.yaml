@@ -54,15 +54,24 @@ importers:
       '@heygen/liveavatar-web-sdk':
         specifier: '*'
         version: 0.0.9(@types/dom-mediacapture-record@1.0.22)
+      autoprefixer:
+        specifier: 10.4.19
+        version: 10.4.19(postcss@8.4.38)
       next:
         specifier: ^15.4.2
         version: 15.4.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      postcss:
+        specifier: 8.4.38
+        version: 8.4.38
       react:
         specifier: ^19.1.0
         version: 19.1.0
       react-dom:
         specifier: ^19.1.0
         version: 19.1.0(react@19.1.0)
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.17
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -79,18 +88,9 @@ importers:
       '@types/react-dom':
         specifier: 19.1.1
         version: 19.1.1(@types/react@19.1.0)
-      autoprefixer:
-        specifier: 10.4.19
-        version: 10.4.19(postcss@8.4.38)
       eslint:
         specifier: ^9.31.0
         version: 9.31.0(jiti@1.21.7)
-      postcss:
-        specifier: 8.4.38
-        version: 8.4.38
-      tailwindcss:
-        specifier: ^3.4.17
-        version: 3.4.17
       typescript:
         specifier: 5.8.2
         version: 5.8.2
