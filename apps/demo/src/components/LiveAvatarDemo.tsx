@@ -99,7 +99,7 @@ export const LiveAvatarDemo = () => {
             </div>
           )}
           <button
-            onClick={handleStart}
+            onClick={() => handleStart()}
             className="w-fit bg-white text-black px-4 py-2 rounded-md"
           >
             Start Full Avatar Session
