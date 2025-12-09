@@ -1,6 +1,7 @@
 {
   "buildCommand": "pnpm turbo build --filter=demo",
-  "outputDirectory": "apps/demo/.next",
+  "outputDirectory": ".next",
+  "rootDirectory": "apps/demo",
   "devCommand": "cd apps/demo && pnpm run dev",
   "installCommand": "pnpm install --frozen-lockfile",
   "framework": "nextjs"
