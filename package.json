@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heygen-com/live-avatar-js-sdk.git"
+    "url": "git+https://github.com/clintcar/clint-avatar.git"
   },
   "license": "MIT",
   "author": "HeyGen",
