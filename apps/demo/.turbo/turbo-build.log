@@ -1,0 +1,56 @@
+
+> demo@0.1.0 build C:\Users\carlscli\live-avatar\apps\demo
+> next build
+
+ ⚠ Warning: Found multiple lockfiles. Selecting C:\Users\carlscli\pnpm-lock.yaml.
+   Consider removing the lockfiles at:
+   * C:\Users\carlscli\live-avatar\pnpm-lock.yaml
+
+   ▲ Next.js 15.4.2
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 3.0s
+   Linting and checking validity of types ...
+
+./src/components/AvatarConfig.tsx
+118:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/LiveAvatarSession.tsx
+379:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/ui/Button.tsx
+5:18  Warning: 'className' is missing in props validation  react/prop-types
+5:29  Warning: 'onClick' is missing in props validation  react/prop-types
+9:22  Warning: 'disabled' is missing in props validation  react/prop-types
+
+./src/liveavatar/context.tsx
+181:22  Warning: The ref value 'sessionRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sessionRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/11) ...
+   Generating static pages (2/11) 
+   Generating static pages (5/11) 
+   Generating static pages (8/11) 
+ ✓ Generating static pages (11/11)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                 Size  First Load JS
+┌ ○ /                                     122 kB         222 kB
+├ ○ /_not-found                            988 B         101 kB
+├ ƒ /api/elevenlabs-text-to-speech         137 B         100 kB
+├ ƒ /api/keep-session-alive                137 B         100 kB
+├ ƒ /api/openai-chat-complete              137 B         100 kB
+├ ƒ /api/start-custom-session              137 B         100 kB
+├ ƒ /api/start-session                     137 B         100 kB
+└ ƒ /api/stop-session                      137 B         100 kB
++ First Load JS shared by all             100 kB
+  ├ chunks/330-bc25180efda06559.js         44 kB
+  ├ chunks/f100e438-f2e2e07420891694.js  54.1 kB
+  └ other shared chunks (total)          1.97 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
