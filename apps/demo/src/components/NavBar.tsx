@@ -18,7 +18,7 @@ export default function NavBar() {
             rel="noopener noreferrer"
             className="text-black hover:text-zinc-600 text-sm font-medium transition-colors"
           >
-            Author: Clint Carlson
+            Director: Clint Carlson
           </a>
           <span className="text-black text-sm">|</span>
           <a
