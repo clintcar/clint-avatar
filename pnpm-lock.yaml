@@ -58,8 +58,8 @@ importers:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
       next:
-        specifier: ^15.5.7
-        version: 15.5.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -104,8 +104,8 @@ importers:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
       next:
-        specifier: ^15.5.7
-        version: 15.5.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -120,10 +120,10 @@ importers:
         version: 3.4.17
     devDependencies:
       '@repo/eslint-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/eslint-config
       '@repo/typescript-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^22.15.3
@@ -150,8 +150,8 @@ importers:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
       next:
-        specifier: ^15.5.7
-        version: 15.5.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -166,10 +166,10 @@ importers:
         version: 3.4.17
     devDependencies:
       '@repo/eslint-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/eslint-config
       '@repo/typescript-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^22.15.3
@@ -196,8 +196,8 @@ importers:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
       next:
-        specifier: ^15.5.7
-        version: 15.5.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -212,10 +212,10 @@ importers:
         version: 3.4.17
     devDependencies:
       '@repo/eslint-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/eslint-config
       '@repo/typescript-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^22.15.3
@@ -242,8 +242,8 @@ importers:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
       next:
-        specifier: ^15.5.7
-        version: 15.5.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -258,10 +258,10 @@ importers:
         version: 3.4.17
     devDependencies:
       '@repo/eslint-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/eslint-config
       '@repo/typescript-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^22.15.3
@@ -288,8 +288,8 @@ importers:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
       next:
-        specifier: ^15.5.7
-        version: 15.5.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -304,10 +304,10 @@ importers:
         version: 3.4.17
     devDependencies:
       '@repo/eslint-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/eslint-config
       '@repo/typescript-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^22.15.3
@@ -334,8 +334,8 @@ importers:
         specifier: 10.4.19
         version: 10.4.19(postcss@8.4.38)
       next:
-        specifier: ^15.5.7
-        version: 15.5.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       postcss:
         specifier: 8.4.38
         version: 8.4.38
@@ -350,10 +350,10 @@ importers:
         version: 3.4.17
     devDependencies:
       '@repo/eslint-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/eslint-config
       '@repo/typescript-config':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^22.15.3
@@ -372,6 +372,10 @@ importers:
         version: 5.8.2
 
   packages/eslint-config:
+    dependencies:
+      next:
+        specifier: 15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@eslint/js':
         specifier: ^9.31.0
@@ -415,6 +419,9 @@ importers:
       livekit-client:
         specifier: 2.15.7
         version: 2.15.7(@types/dom-mediacapture-record@1.0.22)
+      next:
+        specifier: 15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       typed-emitter:
         specifier: 2.1.0
         version: 2.1.0
@@ -477,7 +484,11 @@ importers:
         specifier: ^4.0.10
         version: 4.0.10(@types/node@22.15.3)(happy-dom@20.0.10)(jiti@1.21.7)(yaml@2.8.1)
 
-  packages/typescript-config: {}
+  packages/typescript-config:
+    dependencies:
+      next:
+        specifier: 15.5.8
+        version: 15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
 
 packages:
 
@@ -895,8 +906,8 @@ packages:
   '@livekit/protocol@1.39.3':
     resolution: {integrity: sha512-hfOnbwPCeZBEvMRdRhU2sr46mjGXavQcrb3BFRfG+Gm0Z7WUSeFdy5WLstXJzEepz17Iwp/lkGwJ4ZgOOYfPuA==}
 
-  '@next/env@15.5.7':
-    resolution: {integrity: sha512-4h6Y2NyEkIEN7Z8YxkA27pq6zTkS09bUSYC0xjd0NpwFxjnIKeZEeH591o5WECSmjpUhLn3H2QLJcDye3Uzcvg==}
+  '@next/env@15.5.8':
+    resolution: {integrity: sha512-ejZHa3ogTxcy851dFoNtfB5B2h7AbSAtHbR5CymUlnz4yW1QjHNufVpvTu8PTnWBKFKjrd4k6Gbi2SsCiJKvxw==}
 
   '@next/eslint-plugin-next@15.5.9':
     resolution: {integrity: sha512-kUzXx0iFiXw27cQAViE1yKWnz/nF8JzRmwgMRTMh8qMY90crNsdXJRh2e+R0vBpFR3kk1yvAR7wev7+fCCb79Q==}
@@ -2115,9 +2126,10 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  next@15.5.7:
-    resolution: {integrity: sha512-+t2/0jIJ48kUpGKkdlhgkv+zPTEOoXyr60qXe68eB/pl3CMJaLeIGjzp5D6Oqt25hCBiBTt8wEeeAzfJvUKnPQ==}
+  next@15.5.8:
+    resolution: {integrity: sha512-Tma2R50eiM7Fx6fbDeHiThq7sPgl06mBr76j6Ga0lMFGrmaLitFsy31kykgb8Z++DR2uIEKi2RZ0iyjIwFd15Q==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
@@ -3115,7 +3127,7 @@ snapshots:
     dependencies:
       '@bufbuild/protobuf': 1.10.1
 
-  '@next/env@15.5.7': {}
+  '@next/env@15.5.8': {}
 
   '@next/eslint-plugin-next@15.5.9':
     dependencies:
@@ -4477,9 +4489,9 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next@15.5.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  next@15.5.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
-      '@next/env': 15.5.7
+      '@next/env': 15.5.8
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001760
       postcss: 8.4.31
