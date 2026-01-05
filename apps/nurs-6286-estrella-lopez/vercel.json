@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm turbo build --filter=nurs-6286-estrella-lopez",
-  "outputDirectory": "apps/nurs-6286-estrella-lopez/.next",
+  "outputDirectory": ".next",
   "devCommand": "pnpm run dev",
   "installCommand": "pnpm install --frozen-lockfile",
   "framework": "nextjs"
