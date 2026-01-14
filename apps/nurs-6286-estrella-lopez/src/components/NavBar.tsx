@@ -11,24 +11,29 @@ export default function NavBar() {
             nurs-6286-estrella-lopez
           </p>
         </div>
-        <div className="flex flex-row justify-end items-center gap-4 mt-2">
-          <a
-            href="https://www.linkedin.com/in/clintcarlson/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-black hover:text-zinc-600 text-sm font-medium transition-colors"
-          >
-            Director: Clint Carlson
-          </a>
-          <span className="text-black text-sm">|</span>
-          <a
-            href="https://www.linkedin.com/in/clintcarlson/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-black hover:text-zinc-600 text-sm font-medium transition-colors"
-          >
-            Contact
-          </a>
+        <div className="flex flex-col items-end gap-1 mt-2">
+          <div className="flex flex-row justify-end items-center gap-4">
+            <a
+              href="https://www.linkedin.com/in/clintcarlson/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black hover:text-zinc-600 text-sm font-medium transition-colors"
+            >
+              Director: Clint Carlson
+            </a>
+            <span className="text-black text-sm">|</span>
+            <a
+              href="https://www.linkedin.com/in/clintcarlson/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black hover:text-zinc-600 text-sm font-medium transition-colors"
+            >
+              Contact
+            </a>
+          </div>
+          <p className="text-black text-xs">
+            Last updated: {new Date().toLocaleString()}
+          </p>
         </div>
       </div>
     </>

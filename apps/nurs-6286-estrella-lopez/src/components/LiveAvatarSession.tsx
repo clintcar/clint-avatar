@@ -195,15 +195,15 @@ const LiveAvatarSessionComponent: React.FC<{
     }
   };
 
-  const handleStartTextChat = async () => {
-    if (sessionState === SessionState.INACTIVE) {
-      await startSession();
-    }
-    setIsVoiceChatMode(false);
-    if (isActive) {
-      stop();
-    }
-  };
+  // const handleStartTextChat = async () => {
+  //   if (sessionState === SessionState.INACTIVE) {
+  //     await startSession();
+  //   }
+  //   setIsVoiceChatMode(false);
+  //   if (isActive) {
+  //     stop();
+  //   }
+  // };
 
   const handleStopChat = useCallback(async () => {
     if (isActive) {
@@ -243,20 +243,20 @@ const LiveAvatarSessionComponent: React.FC<{
     setMessage("");
   }, [message, sendMessage]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        event.key === "Enter" &&
-        !isVoiceChatMode &&
-        sessionState === SessionState.CONNECTED
-      ) {
-        handleSendMessage();
-      }
-    };
+  // useEffect(() => {
+  //   const handleKeyDown = (event: KeyboardEvent) => {
+  //     if (
+  //       event.key === "Enter" &&
+  //       !isVoiceChatMode &&
+  //       sessionState === SessionState.CONNECTED
+  //     ) {
+  //       handleSendMessage();
+  //     }
+  //   };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleSendMessage, isVoiceChatMode, sessionState]);
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   return () => window.removeEventListener("keydown", handleKeyDown);
+  // }, [handleSendMessage, isVoiceChatMode, sessionState]);
 
   const isConnected = sessionState === SessionState.CONNECTED;
   const isConnecting = sessionState === SessionState.CONNECTING;
@@ -271,7 +271,7 @@ const LiveAvatarSessionComponent: React.FC<{
             {mode === "FULL" && (
               <>
                 <Button onClick={handleStartVoiceChat}>Start Voice Chat</Button>
-                <Button onClick={handleStartTextChat}>Start Text Chat</Button>
+                {/* <Button onClick={handleStartTextChat}>Start Text Chat</Button> */}
               </>
             )}
             {mode === "CUSTOM" && (
@@ -457,7 +457,7 @@ const LiveAvatarSessionComponent: React.FC<{
                 >
                   Voice Chat
                 </button>
-                <button
+                {/* <button
                   className={`px-4 py-2 rounded-lg text-sm ${
                     !isVoiceChatMode
                       ? "bg-zinc-300 text-black"
@@ -472,10 +472,10 @@ const LiveAvatarSessionComponent: React.FC<{
                   disabled={isLoading}
                 >
                   Text Chat
-                </button>
+                </button> */}
               </div>
             )}
-            {!isVoiceChatMode && mode === "FULL" && (
+            {/* {!isVoiceChatMode && mode === "FULL" && (
               <div className="flex flex-row gap-2 items-end w-full max-w-[600px]">
                 <input
                   type="text"
@@ -493,7 +493,7 @@ const LiveAvatarSessionComponent: React.FC<{
                   Send
                 </Button>
               </div>
-            )}
+            )} */}
             {mode === "CUSTOM" && (
               <div className="flex flex-row gap-2 items-end w-full max-w-[600px]">
                 <input
