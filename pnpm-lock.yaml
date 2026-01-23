@@ -233,6 +233,52 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
+  apps/nurs-6286-jack-morris:
+    dependencies:
+      '@heygen/liveavatar-web-sdk':
+        specifier: '*'
+        version: 0.0.9(@types/dom-mediacapture-record@1.0.22)
+      autoprefixer:
+        specifier: 10.4.19
+        version: 10.4.19(postcss@8.4.38)
+      next:
+        specifier: ^15.5.7
+        version: 15.5.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      postcss:
+        specifier: 8.4.38
+        version: 8.4.38
+      react:
+        specifier: ^19.1.0
+        version: 19.1.0
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.1.0(react@19.1.0)
+      tailwindcss:
+        specifier: ^3.4.17
+        version: 3.4.17
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      '@types/react':
+        specifier: 19.1.0
+        version: 19.1.0
+      '@types/react-dom':
+        specifier: 19.1.1
+        version: 19.1.1(@types/react@19.1.0)
+      eslint:
+        specifier: ^9.31.0
+        version: 9.31.0(jiti@1.21.7)
+      typescript:
+        specifier: 5.8.2
+        version: 5.8.2
+
   apps/sdm-health-assessment-avatar_01:
     dependencies:
       '@heygen/liveavatar-web-sdk':
@@ -2981,7 +3027,7 @@ snapshots:
   '@eslint/eslintrc@3.3.1':
     dependencies:
       ajv: 6.12.6
-      debug: 4.4.1
+      debug: 4.4.3
       espree: 10.4.0
       globals: 14.0.0
       ignore: 5.3.2
