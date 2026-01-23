@@ -1,6 +1,7 @@
 # Liveavatar NextJS Demo
 
 This is a quick demo to demonstrate the various capabilities of the LiveAvatar Web SDK.
+Vercel deploy trigger update.
 
 ## Installation
 
