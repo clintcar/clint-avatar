@@ -19,7 +19,8 @@
   "main": "index.js",
   "scripts": {
     "build": "turbo run build",
-    "demo": "turbo run dev",
+    "demo": "turbo run dev --filter=demo",
+    "pop": "turbo run dev --filter=pop",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "prettier": "prettier --write \"**/*.{ts,tsx,md}\"",
