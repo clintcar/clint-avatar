@@ -1,5 +1,5 @@
 export declare enum ConnectionQuality {
-    UNKNOWN = "UNKNOWN",
-    GOOD = "GOOD",
-    BAD = "BAD"
+  UNKNOWN = "UNKNOWN",
+  GOOD = "GOOD",
+  BAD = "BAD",
 }

@@ -1,41 +1,31 @@
-[?9001h[?1004h[?25l[2J[m[2;1H> demo@0.1.0 lint C:\Users\carlscli\live-avatar\apps\demo
-> next lint --max-warnings 0[5;1H]0;C:\WINDOWS\system32\cmd.exe[?25h[?25l [33m[1m⚠[m Warning: Found multiple lockfiles. Selecting C:\Users\carlscli\pnpm-lock.yaml.
-   Consider removing the lockfiles at:
-   * C:\Users\carlscli\live-avatar\pnpm-lock.yaml[10;1H[?25h[?25l[36m
-./src/components/AvatarConfig.tsx[33m
-118[m:[33m15  [1mWarning[m: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  [90m[1m@next/next/no-img-element[36m[22m[19;1H./src/components/LiveAvatarSession.tsx[33m
-13[m:[33m3  [1mWarning[m: 'VoiceChatState' is defined but never used.  [90m[1m@typescript-eslint/no-unused-vars[33m[22m
-89[m:[33m11  [1mWarning[m: 'interrupt' is assigned a value but never used.  [90m[1m@typescript-eslint/no-unused-vars[33m[22m
-89[m:[33m30  [1mWarning[m: 'startListening' is assigned a value but never used.  [90m[1m@typescript-eslint/no-unused-vars[33m[22m
-89[m:[33m46  [1mWarning[m: 'stopListening' is assigned a value but never used.  [90m[1m@typescript-eslint/no-unused-vars[33m[22m
-138[m:[33m6  [1mWarning[m: React Hook useEffect has a missing dependen[?25h
-[27;59Hncy: 'timeRemaining'. Either include it or remove the depend
-[27;59Hdency array.  [90m[1mreact-hooks/exhaustive-deps[m[K
-[33m381[m:[33m15  [1mWarning[m: Using `<img>` could result in slower LCP a
-[27;59Hand higher bandwidth. Consider using `<Image />` from `next/
-[27;59H/image` or a custom image loader to automatically optimize i
-[27;59Himages. This may incur additional usage or cost from your pr
-[27;59Hrovider. See: https://nextjs.org/docs/messages/no-img-elemen
-[27;59Hnt  [90m[1m@next/next/no-img-element[m[K
 
-[36m./src/components/ui/Button.tsx[m
-[33m5[m:[33m18  [1mWarning[m: 'className' is missing in props validation  
-[27;59H [90m[1mreact/prop-types[22m[K[m
-[33m5[m:[33m29  [1mWarning[m: 'onClick' is missing in props validation  [90m[1mre[m
-[90m[1m[27;59Heact/prop-types[22m[K[m
-[33m9[m:[33m22  [1mWarning[m: 'disabled' is missing in props validation  [90m[1mr[m
-[90m[1m[27;59Hreact/prop-types[22m[K[m
+> demo@0.1.0 lint /Users/carlscli/Projects/clint-avatar/apps/demo
+> next lint --max-warnings 0
 
-[36m./src/liveavatar/context.tsx[m
-[33m181[m:[33m22  [1mWarning[m: The ref value 'sessionRef.current' will li
-[27;59Hikely have changed by the time this effect cleanup function 
-[27;59H runs. If this ref points to a node rendered by React, copy 
-[27;59H 'sessionRef.current' to a variable inside the effect, and u
-[27;59Huse that variable in the cleanup function.  [90m[1mreact-hooks/exha[m
-[90m[1m[27;59Haustive-deps[22m[K[m
+`next lint` is deprecated and will be removed in Next.js 16.
+For new projects, use create-next-app to choose your preferred linter.
+For existing projects, migrate to the ESLint CLI:
+npx @next/codemod@canary next-lint-to-eslint-cli .
 
-[36minfo  [m- Need to disable some ESLint rules? Learn more here:
-[27;59H: https://nextjs.org/docs/app/api-reference/config/eslint#di
-[27;59Hisabling-rules
-[30m[41m ELIFECYCLE [m [31mCommand failed with exit code 1.[m
-[?9001l[?1004l
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+
+./src/components/AvatarConfig.tsx
+118:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/LiveAvatarSession.tsx
+376:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/ui/Button.tsx
+5:18  Warning: 'className' is missing in props validation  react/prop-types
+5:29  Warning: 'onClick' is missing in props validation  react/prop-types
+9:22  Warning: 'disabled' is missing in props validation  react/prop-types
+
+./src/liveavatar/context.tsx
+181:22  Warning: The ref value 'sessionRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'sessionRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+ ELIFECYCLE  Command failed with exit code 1.
