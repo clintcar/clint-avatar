@@ -26,7 +26,6 @@ const LiveAvatarSessionComponent: React.FC<{
     avatar_id?: string;
     language?: string;
     emotion?: string;
-    context_id?: string;
   }) => void;
 }> = ({ mode, onSessionStopped, onRestartSession }) => {
   const [message, setMessage] = useState("");
@@ -34,9 +33,9 @@ const LiveAvatarSessionComponent: React.FC<{
   const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("avatarBackgroundImage");
-      return saved || "/judy-headshot.png";
+      return saved || "/headshot.png";
     }
-    return "/judy-headshot.png";
+    return "/headshot.png";
   });
   const [avatarId, setAvatarId] = useState(() => {
     if (typeof window !== "undefined") {
@@ -56,12 +55,7 @@ const LiveAvatarSessionComponent: React.FC<{
     }
     return "friendly";
   });
-  const [contextId, setContextId] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("avatarContextId") || DEFAULT_CONTEXT_ID;
-    }
-    return DEFAULT_CONTEXT_ID;
-  });
+  const [contextId, setContextId] = useState(DEFAULT_CONTEXT_ID);
   const [timerDuration, setTimerDuration] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [isVoiceChatMode, setIsVoiceChatMode] = useState(true);
@@ -229,7 +223,6 @@ const LiveAvatarSessionComponent: React.FC<{
         avatar_id: avatarId || undefined,
         language: language,
         emotion: emotion,
-        context_id: contextId || undefined,
       });
     }
   }, [
@@ -240,7 +233,6 @@ const LiveAvatarSessionComponent: React.FC<{
     avatarId,
     language,
     emotion,
-    contextId,
   ]);
 
   const handleSendMessage = useCallback(() => {
@@ -426,16 +418,7 @@ const LiveAvatarSessionComponent: React.FC<{
                     }
                   }}
                   contextId={contextId}
-                  onContextIdChange={(value) => {
-                    setContextId(value);
-                    if (typeof window !== "undefined") {
-                      if (value) {
-                        localStorage.setItem("avatarContextId", value);
-                      } else {
-                        localStorage.removeItem("avatarContextId");
-                      }
-                    }
-                  }}
+                  onContextIdChange={setContextId}
                   timerDuration={timerDuration}
                   onTimerDurationChange={setTimerDuration}
                   backgroundImage={backgroundImage}
@@ -559,7 +542,6 @@ export const LiveAvatarSession: React.FC<{
     avatar_id?: string;
     language?: string;
     emotion?: string;
-    context_id?: string;
   }) => void;
 }> = ({ mode, sessionAccessToken, onSessionStopped, onRestartSession }) => {
   return (

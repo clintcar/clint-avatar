@@ -13,7 +13,7 @@ export const LiveAvatarDemo = () => {
     language?: string;
     emotion?: string;
     context_id?: string;
-  }) => {
+  }): Promise<void> => {
     try {
       const res = await fetch("/api/start-session", {
         method: "POST",
@@ -55,14 +55,14 @@ export const LiveAvatarDemo = () => {
     setSessionToken("");
   };
 
-  const onRestartSession = (config?: {
+  const onRestartSession = async (config?: {
     avatar_id?: string;
     language?: string;
     emotion?: string;
     context_id?: string;
   }) => {
     // Automatically restart the Full Avatar Session with config
-    handleStart(config);
+    await handleStart(config);
   };
 
   // Auto-start Full Avatar Session on page load

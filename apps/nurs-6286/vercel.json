@@ -1,0 +1,7 @@
+{
+  "buildCommand": "pnpm turbo build --filter=nurs-6286",
+  "outputDirectory": ".next",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nextjs"
+}

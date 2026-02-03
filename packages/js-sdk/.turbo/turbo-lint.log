@@ -1,4 +1,4 @@
 
-> @heygen/liveavatar-web-sdk@0.0.9 lint /Users/carlscli/Projects/clint-avatar/packages/js-sdk
+> @heygen/liveavatar-web-sdk@0.0.9 lint C:\Users\carlscli\live-avatar\packages\js-sdk
 > eslint . --max-warnings 0
 
