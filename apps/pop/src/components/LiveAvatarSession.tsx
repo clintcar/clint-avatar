@@ -33,9 +33,9 @@ const LiveAvatarSessionComponent: React.FC<{
   const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("avatarBackgroundImage");
-      return saved || "/judy-headshot.png";
+      return saved || "/headshot.png";
     }
-    return "/judy-headshot.png";
+    return "/headshot.png";
   });
   const [avatarId, setAvatarId] = useState(() => {
     if (typeof window !== "undefined") {
