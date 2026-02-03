@@ -12,7 +12,8 @@ export const LiveAvatarDemo = () => {
     avatar_id?: string;
     language?: string;
     emotion?: string;
-  }) => {
+    context_id?: string;
+  }): Promise<void> => {
     try {
       const res = await fetch("/api/start-session", {
         method: "POST",
@@ -54,13 +55,14 @@ export const LiveAvatarDemo = () => {
     setSessionToken("");
   };
 
-  const onRestartSession = (config?: {
+  const onRestartSession = async (config?: {
     avatar_id?: string;
     language?: string;
     emotion?: string;
+    context_id?: string;
   }) => {
     // Automatically restart the Full Avatar Session with config
-    handleStart(config);
+    await handleStart(config);
   };
 
   // Auto-start Full Avatar Session on page load
@@ -79,11 +81,16 @@ export const LiveAvatarDemo = () => {
         typeof window !== "undefined"
           ? localStorage.getItem("avatarIdOverride")
           : null;
+      const savedContextId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("avatarContextId")
+          : null;
 
       handleStart({
         language: savedLanguage || undefined,
         emotion: savedEmotion || undefined,
         avatar_id: savedAvatarId || undefined,
+        context_id: savedContextId || undefined,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -8,13 +8,14 @@ export async function POST(request: Request) {
     const avatarId = body.avatar_id || AVATAR_ID;
     const language = body.language || LANGUAGE;
     const emotion = body.emotion;
+    const contextId = body.context_id || CONTEXT_ID;
 
     const avatarPersona: {
       context_id: string;
       language: string;
       emotion?: string;
     } = {
-      context_id: CONTEXT_ID,
+      context_id: contextId,
       language: language,
     };
 

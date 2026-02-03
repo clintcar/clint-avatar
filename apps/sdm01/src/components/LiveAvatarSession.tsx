@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   LiveAvatarContextProvider,
   useSession,
@@ -13,6 +13,8 @@ import { Button } from "./ui/Button";
 import { AvatarConfig } from "./AvatarConfig";
 import { MessageHistory } from "./MessageHistory";
 import { LoadingIcon, FullscreenIcon, MicIcon, MicOffIcon } from "./ui/Icons";
+import { Select } from "./ui/Select";
+import { AVATAR_PRESETS, AvatarPreset } from "./avatarPresets";
 import { CONTEXT_ID, LANGUAGE } from "../../app/api/secrets";
 
 // Note: These need to be imported as constants, adjusting if needed
@@ -26,7 +28,8 @@ const LiveAvatarSessionComponent: React.FC<{
     avatar_id?: string;
     language?: string;
     emotion?: string;
-  }) => void;
+    context_id?: string;
+  }) => Promise<void> | void;
 }> = ({ mode, onSessionStopped, onRestartSession }) => {
   const [message, setMessage] = useState("");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -55,10 +58,16 @@ const LiveAvatarSessionComponent: React.FC<{
     }
     return "friendly";
   });
-  const [contextId, setContextId] = useState(DEFAULT_CONTEXT_ID);
+  const [contextId, setContextId] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("avatarContextId") || DEFAULT_CONTEXT_ID;
+    }
+    return DEFAULT_CONTEXT_ID;
+  });
   const [timerDuration, setTimerDuration] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [isVoiceChatMode, setIsVoiceChatMode] = useState(true);
+  const [isPresetLoading, setIsPresetLoading] = useState(false);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -86,6 +95,13 @@ const LiveAvatarSessionComponent: React.FC<{
 
   const { sendMessage } = useTextChat(mode);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const selectedPreset = useMemo(() => {
+    return AVATAR_PRESETS.find(
+      (preset) =>
+        preset.avatarId === avatarId && preset.contextId === contextId,
+    );
+  }, [avatarId, contextId]);
 
   useEffect(() => {
     if (sessionState === SessionState.DISCONNECTED) {
@@ -185,6 +201,9 @@ const LiveAvatarSessionComponent: React.FC<{
   }, []);
 
   const handleStartVoiceChat = async () => {
+    if (isPresetLoading) {
+      return;
+    }
     if (isActive) {
       stop();
     } else {
@@ -205,6 +224,47 @@ const LiveAvatarSessionComponent: React.FC<{
     }
   };
 
+  const handlePresetSelect = useCallback(
+    async (preset: AvatarPreset) => {
+      setIsPresetLoading(true);
+      setAvatarId(preset.avatarId);
+      setContextId(preset.contextId);
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("avatarIdOverride", preset.avatarId);
+        localStorage.setItem("avatarContextId", preset.contextId);
+      }
+
+      try {
+        if (onRestartSession) {
+          if (sessionState !== SessionState.INACTIVE) {
+            if (isActive) {
+              stop();
+            }
+            await stopSession();
+          }
+          await onRestartSession({
+            avatar_id: preset.avatarId,
+            language: language,
+            emotion: emotion,
+            context_id: preset.contextId,
+          });
+        }
+      } finally {
+        setIsPresetLoading(false);
+      }
+    },
+    [
+      emotion,
+      isActive,
+      language,
+      onRestartSession,
+      sessionState,
+      stop,
+      stopSession,
+    ],
+  );
+
   const handleStopChat = useCallback(async () => {
     if (isActive) {
       stop();
@@ -223,6 +283,7 @@ const LiveAvatarSessionComponent: React.FC<{
         avatar_id: avatarId || undefined,
         language: language,
         emotion: emotion,
+        context_id: contextId || undefined,
       });
     }
   }, [
@@ -233,6 +294,7 @@ const LiveAvatarSessionComponent: React.FC<{
     avatarId,
     language,
     emotion,
+    contextId,
   ]);
 
   const handleSendMessage = useCallback(() => {
@@ -267,26 +329,54 @@ const LiveAvatarSessionComponent: React.FC<{
     <div className="w-full flex flex-col gap-8 max-w-[1080px]">
       <div className="flex flex-col rounded-xl bg-zinc-900 overflow-hidden">
         {isInactive && (
-          <div className="flex flex-row justify-center items-center gap-4 p-4 border-b border-zinc-700">
-            {mode === "FULL" && (
-              <>
-                <Button onClick={handleStartVoiceChat}>Start Voice Chat</Button>
-                <Button onClick={handleStartTextChat}>Start Text Chat</Button>
-              </>
-            )}
-            {mode === "CUSTOM" && (
-              <Button onClick={() => startSession()}>Start Session</Button>
-            )}
+          <div className="flex flex-row items-center gap-4 p-4 border-b border-zinc-700">
+            <div className="flex flex-row items-center gap-4">
+              {mode === "FULL" && (
+                <>
+                  <Button
+                    onClick={handleStartVoiceChat}
+                    disabled={isPresetLoading}
+                  >
+                    Start Voice Chat
+                  </Button>
+                  <Button onClick={handleStartTextChat} disabled={isPresetLoading}>
+                    Start Text Chat
+                  </Button>
+                </>
+              )}
+              {mode === "CUSTOM" && (
+                <Button onClick={() => startSession()}>Start Session</Button>
+              )}
+            </div>
+            <div className="ml-auto w-full max-w-[320px]">
+              <Select
+                isSelected={(option) =>
+                  option.avatarId === avatarId &&
+                  option.contextId === contextId
+                }
+                options={AVATAR_PRESETS}
+                placeholder="Select a preset"
+                renderOption={(option) => option.name}
+                value={selectedPreset?.name || null}
+                onSelect={handlePresetSelect}
+                disabled={isPresetLoading}
+              />
+            </div>
           </div>
         )}
         {(isConnected || isConnecting) && (
-          <div className="flex flex-row justify-center items-center gap-4 p-4 border-b border-zinc-700">
+          <div className="flex flex-row justify-center items-center gap-4 p-4 border-b border-zinc-700 relative">
             <Button
               onClick={handleStopChat}
               className="bg-red-600 hover:bg-red-700 text-white"
             >
               Stop Chat
             </Button>
+            {selectedPreset?.name && (
+              <div className="absolute left-4 text-sm text-white/80">
+                Speaking with: {selectedPreset.name}
+              </div>
+            )}
           </div>
         )}
         <div
@@ -418,7 +508,16 @@ const LiveAvatarSessionComponent: React.FC<{
                     }
                   }}
                   contextId={contextId}
-                  onContextIdChange={setContextId}
+                  onContextIdChange={(value) => {
+                    setContextId(value);
+                    if (typeof window !== "undefined") {
+                      if (value) {
+                        localStorage.setItem("avatarContextId", value);
+                      } else {
+                        localStorage.removeItem("avatarContextId");
+                      }
+                    }
+                  }}
                   timerDuration={timerDuration}
                   onTimerDurationChange={setTimerDuration}
                   backgroundImage={backgroundImage}
@@ -542,10 +641,14 @@ export const LiveAvatarSession: React.FC<{
     avatar_id?: string;
     language?: string;
     emotion?: string;
-  }) => void;
+    context_id?: string;
+  }) => Promise<void> | void;
 }> = ({ mode, sessionAccessToken, onSessionStopped, onRestartSession }) => {
   return (
-    <LiveAvatarContextProvider sessionAccessToken={sessionAccessToken}>
+    <LiveAvatarContextProvider
+      key={sessionAccessToken}
+      sessionAccessToken={sessionAccessToken}
+    >
       <LiveAvatarSessionComponent
         mode={mode}
         onSessionStopped={onSessionStopped}
