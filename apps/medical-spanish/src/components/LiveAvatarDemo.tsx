@@ -10,6 +10,7 @@ export const LiveAvatarDemo = () => {
 
   const handleStart = async (config?: {
     avatar_id?: string;
+    voice_id?: string;
     language?: string;
     emotion?: string;
   }) => {
@@ -56,6 +57,7 @@ export const LiveAvatarDemo = () => {
 
   const onRestartSession = (config?: {
     avatar_id?: string;
+    voice_id?: string;
     language?: string;
     emotion?: string;
   }) => {
@@ -79,11 +81,16 @@ export const LiveAvatarDemo = () => {
         typeof window !== "undefined"
           ? localStorage.getItem("avatarIdOverride")
           : null;
+      const savedVoiceId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("voiceIdOverride")
+          : null;
 
       handleStart({
         language: savedLanguage || undefined,
         emotion: savedEmotion || undefined,
         avatar_id: savedAvatarId || undefined,
+        voice_id: savedVoiceId || undefined,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

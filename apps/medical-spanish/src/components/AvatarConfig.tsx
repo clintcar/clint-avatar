@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Input } from "./ui/Input";
 import { Select } from "./ui/Select";
 import { Field } from "./ui/Field";
@@ -8,9 +8,13 @@ import {
   VOICE_EMOTIONS,
 } from "../../app/lib/constants";
 
+type VoiceOption = { id: string; name: string };
+
 interface AvatarConfigProps {
   avatarId: string;
   onAvatarIdChange: (avatarId: string) => void;
+  voiceId: string;
+  onVoiceIdChange: (voiceId: string) => void;
   language: string;
   onLanguageChange: (language: string) => void;
   emotion: string;
@@ -26,6 +30,8 @@ interface AvatarConfigProps {
 export const AvatarConfig: React.FC<AvatarConfigProps> = ({
   avatarId,
   onAvatarIdChange,
+  voiceId,
+  onVoiceIdChange,
   language,
   onLanguageChange,
   emotion,
@@ -39,6 +45,67 @@ export const AvatarConfig: React.FC<AvatarConfigProps> = ({
 }) => {
   const [isCustomTimer, setIsCustomTimer] = useState<boolean>(false);
   const [customTimerValue, setCustomTimerValue] = useState<string>("");
+  const [voices, setVoices] = useState<VoiceOption[]>([]);
+  const [voicesLoading, setVoicesLoading] = useState(false);
+  const [voicesError, setVoicesError] = useState<string | null>(null);
+  const [useCustomVoice, setUseCustomVoice] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setVoicesLoading(true);
+    setVoicesError(null);
+    fetch("/api/list-voices")
+      .then((res) => {
+        if (!res.ok)
+          return res
+            .json()
+            .then((j) => Promise.reject(j?.error ?? res.statusText));
+        return res.json();
+      })
+      .then((json) => {
+        if (cancelled) return;
+        if (json?.error) {
+          setVoicesError(json.error);
+          return;
+        }
+        const list = Array.isArray(json)
+          ? json
+          : (json?.data ?? json?.voices ?? json?.results ?? []);
+        const items = Array.isArray(list) ? list : [];
+        setVoices(
+          items
+            .map((v: { id?: string; voice_id?: string; name?: string }) => ({
+              id: String(v.id ?? v.voice_id ?? ""),
+              name: String(v.name ?? v.id ?? v.voice_id ?? "Unknown"),
+            }))
+            .filter((v: VoiceOption) => v.id),
+        );
+      })
+      .catch((err) => {
+        if (!cancelled)
+          setVoicesError(
+            typeof err === "string"
+              ? err
+              : (err?.error ?? err?.message ?? "Failed to load voices"),
+          );
+      })
+      .finally(() => {
+        if (!cancelled) setVoicesLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const selectedVoice = useMemo(() => {
+    if (useCustomVoice || (voiceId && !voices.find((v) => v.id === voiceId))) {
+      return { isCustom: true, id: voiceId, name: "Custom voice ID" };
+    }
+    if (!voiceId) return null;
+    const found = voices.find((v) => v.id === voiceId);
+    if (found) return { isCustom: false, ...found };
+    return null;
+  }, [voiceId, voices, useCustomVoice]);
 
   const selectedAvatar = useMemo(() => {
     const avatar = AVATARS.find((avatar) => avatar.avatar_id === avatarId);
@@ -162,6 +229,61 @@ export const AvatarConfig: React.FC<AvatarConfigProps> = ({
           onChange={onContextIdChange}
         />
       </Field>
+      <Field label="Voice">
+        <Select
+          isSelected={(option) =>
+            typeof option === "string"
+              ? !!selectedVoice?.isCustom
+              : option.id === selectedVoice?.id
+          }
+          options={[...voices, "CUSTOM"]}
+          placeholder={voicesLoading ? "Loading voices…" : "Select voice"}
+          disabled={voicesLoading}
+          renderOption={(option) =>
+            typeof option === "string" ? "Custom voice ID" : option.name
+          }
+          value={
+            selectedVoice?.isCustom
+              ? "Custom voice ID"
+              : (selectedVoice?.name ?? null)
+          }
+          onSelect={(option) => {
+            if (typeof option === "string") {
+              setUseCustomVoice(true);
+              onVoiceIdChange("");
+            } else {
+              setUseCustomVoice(false);
+              onVoiceIdChange(option.id);
+            }
+          }}
+        />
+        {voicesError && (
+          <p className="text-red-400 text-xs mt-1">{voicesError}</p>
+        )}
+        {!voicesLoading && voices.length === 0 && !voicesError && (
+          <p className="text-zinc-400 text-xs mt-1">
+            No voices from API.{" "}
+            <a
+              href="https://docs.liveavatar.com/reference/list_voices_v1_voices_get"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-amber-400 hover:underline"
+            >
+              View list in LiveAvatar docs
+            </a>{" "}
+            (use Try it) or enter a voice ID below.
+          </p>
+        )}
+      </Field>
+      {(selectedVoice?.isCustom || (!voicesLoading && voices.length === 0)) && (
+        <Field label="Custom Voice ID">
+          <Input
+            placeholder="Paste voice ID from LiveAvatar docs or support"
+            value={voiceId}
+            onChange={onVoiceIdChange}
+          />
+        </Field>
+      )}
       <Field label="Avatar ID">
         <Select
           isSelected={(option) =>

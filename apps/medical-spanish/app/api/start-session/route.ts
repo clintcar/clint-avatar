@@ -1,4 +1,11 @@
-import { API_KEY, API_URL, AVATAR_ID, CONTEXT_ID, LANGUAGE } from "../secrets";
+import {
+  API_KEY,
+  API_URL,
+  AVATAR_ID,
+  CONTEXT_ID,
+  LANGUAGE,
+  VOICE_ID,
+} from "../secrets";
 
 export async function POST(request: Request) {
   let session_token = "";
@@ -8,11 +15,13 @@ export async function POST(request: Request) {
     const avatarId = body.avatar_id || AVATAR_ID;
     const language = body.language || LANGUAGE;
     const emotion = body.emotion;
+    const voiceId = body.voice_id ?? VOICE_ID;
 
     const avatarPersona: {
       context_id: string;
       language: string;
       emotion?: string;
+      voice_id?: string;
     } = {
       context_id: CONTEXT_ID,
       language: language,
@@ -20,6 +29,9 @@ export async function POST(request: Request) {
 
     if (emotion) {
       avatarPersona.emotion = emotion;
+    }
+    if (voiceId) {
+      avatarPersona.voice_id = voiceId;
     }
 
     const res = await fetch(`${API_URL}/v1/sessions/token`, {

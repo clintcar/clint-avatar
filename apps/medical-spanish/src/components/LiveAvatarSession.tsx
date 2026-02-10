@@ -24,6 +24,7 @@ const LiveAvatarSessionComponent: React.FC<{
   onSessionStopped: () => void;
   onRestartSession?: (config: {
     avatar_id?: string;
+    voice_id?: string;
     language?: string;
     emotion?: string;
   }) => void;
@@ -40,6 +41,12 @@ const LiveAvatarSessionComponent: React.FC<{
   const [avatarId, setAvatarId] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("avatarIdOverride") || "";
+    }
+    return "";
+  });
+  const [voiceId, setVoiceId] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("voiceIdOverride") || "";
     }
     return "";
   });
@@ -221,6 +228,7 @@ const LiveAvatarSessionComponent: React.FC<{
     if (onRestartSession) {
       onRestartSession({
         avatar_id: avatarId || undefined,
+        voice_id: voiceId || undefined,
         language: language,
         emotion: emotion,
       });
@@ -231,6 +239,7 @@ const LiveAvatarSessionComponent: React.FC<{
     stopSession,
     onRestartSession,
     avatarId,
+    voiceId,
     language,
     emotion,
   ]);
@@ -403,6 +412,17 @@ const LiveAvatarSessionComponent: React.FC<{
                       }
                     }
                   }}
+                  voiceId={voiceId}
+                  onVoiceIdChange={(value) => {
+                    setVoiceId(value);
+                    if (typeof window !== "undefined") {
+                      if (value) {
+                        localStorage.setItem("voiceIdOverride", value);
+                      } else {
+                        localStorage.removeItem("voiceIdOverride");
+                      }
+                    }
+                  }}
                   language={language}
                   onLanguageChange={(value) => {
                     setLanguage(value);
@@ -540,6 +560,7 @@ export const LiveAvatarSession: React.FC<{
   onSessionStopped: () => void;
   onRestartSession?: (config: {
     avatar_id?: string;
+    voice_id?: string;
     language?: string;
     emotion?: string;
   }) => void;
