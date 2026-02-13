@@ -11,8 +11,8 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
     contextId: "d95f4b2c-b81b-4fe5-afd3-3d428e724ee6",
   },
   {
-    name: "Jack Morris",
-    avatarId: "0930fd59-c8ad-434d-ad53-b391a1768720",
+    name: "Ann Morris",
+    avatarId: "513fd1b7-7ef9-466d-9af2-344e51eeb833",
     contextId: "f54937d5-dcbf-4a2f-9c85-ddfd77d3f60c",
   },
   {
