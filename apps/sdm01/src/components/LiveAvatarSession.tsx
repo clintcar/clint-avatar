@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   LiveAvatarContextProvider,
   useSession,
@@ -339,7 +345,10 @@ const LiveAvatarSessionComponent: React.FC<{
                   >
                     Start Voice Chat
                   </Button>
-                  <Button onClick={handleStartTextChat} disabled={isPresetLoading}>
+                  <Button
+                    onClick={handleStartTextChat}
+                    disabled={isPresetLoading}
+                  >
                     Start Text Chat
                   </Button>
                 </>
@@ -351,8 +360,7 @@ const LiveAvatarSessionComponent: React.FC<{
             <div className="ml-auto w-full max-w-[320px]">
               <Select
                 isSelected={(option) =>
-                  option.avatarId === avatarId &&
-                  option.contextId === contextId
+                  option.avatarId === avatarId && option.contextId === contextId
                 }
                 options={AVATAR_PRESETS}
                 placeholder="Select a preset"

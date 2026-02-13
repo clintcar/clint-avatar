@@ -4,8 +4,8 @@ import NavBar from "../src/components/NavBar";
 
 export const metadata: Metadata = {
   title: {
-    default: "Nursing-6286 | Author: Clint Carlson",
-    template: `%s - Nursing-6286`,
+    default: "Nursing - 6286 | Author: Clint Carlson",
+    template: `%s - Nursing - 6286`,
   },
 };
 

@@ -7,7 +7,7 @@ export default function NavBar() {
     <>
       <div className="flex flex-col w-[1000px] m-auto px-6 pt-6 pb-2">
         <div className="flex flex-row justify-center items-center">
-          <p className="text-4xl font-semibold text-black">Nursing-6286</p>
+          <p className="text-4xl font-semibold text-black">Nursing - 6286</p>
         </div>
         <div className="flex flex-col items-end gap-1 mt-2">
           <div className="flex flex-row justify-end items-center gap-4">

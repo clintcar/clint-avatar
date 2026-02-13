@@ -11,7 +11,7 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
     contextId: "d95f4b2c-b81b-4fe5-afd3-3d428e724ee6",
   },
   {
-    name: "Jack Moris",
+    name: "Jack Morris",
     avatarId: "0930fd59-c8ad-434d-ad53-b391a1768720",
     contextId: "f54937d5-dcbf-4a2f-9c85-ddfd77d3f60c",
   },
@@ -21,9 +21,9 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
     contextId: "c0e39cb6-9756-49be-9204-482d672c68da",
   },
   {
-    name: "Abby Jones",
-    avatarId: "ab0765ad-69de-41fb-9f8a-bd01c3c52d6f",
-    contextId: "c0e39cb6-9756-49be-9204-482d672c68da",
+    name: "Alex Jones",
+    avatarId: "dc2935cf-5863-4f08-943b-c7478aea59fb",
+    contextId: "bb1ddf4c-de89-4934-8c1e-886da21ee43a",
   },
   {
     name: "Beth Vet",
