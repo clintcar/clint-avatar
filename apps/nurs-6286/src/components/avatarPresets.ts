@@ -26,8 +26,8 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
     contextId: "bb1ddf4c-de89-4934-8c1e-886da21ee43a",
   },
   {
-    name: "Beth Vet",
-    avatarId: "40b4f000-f783-4bba-a327-ea58b1a6fdf2",
+    name: "Bobby Vet",
+    avatarId: "7b888024-f8c9-4205-95e1-78ce01497bda",
     contextId: "8e1a82a1-c41f-4cd0-83cb-e435da475ef2",
   },
 ];
