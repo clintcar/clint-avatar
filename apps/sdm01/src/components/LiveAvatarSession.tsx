@@ -38,7 +38,7 @@ const LiveAvatarSessionComponent: React.FC<{
   }) => Promise<void> | void;
 }> = ({ mode, onSessionStopped, onRestartSession }) => {
   const [message, setMessage] = useState("");
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(true);
   const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("avatarBackgroundImage");
