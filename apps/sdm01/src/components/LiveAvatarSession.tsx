@@ -26,6 +26,7 @@ import { CONTEXT_ID, LANGUAGE } from "../../app/api/secrets";
 // Note: These need to be imported as constants, adjusting if needed
 const DEFAULT_CONTEXT_ID = CONTEXT_ID || "";
 const DEFAULT_LANGUAGE = LANGUAGE || "en";
+const BACKGROUND_RESET_KEY = "avatarBackgroundImageResetV1";
 
 const LiveAvatarSessionComponent: React.FC<{
   mode: "FULL" | "CUSTOM";
@@ -42,9 +43,9 @@ const LiveAvatarSessionComponent: React.FC<{
   const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("avatarBackgroundImage");
-      return saved || "/headshot.png";
+      return saved || null;
     }
-    return "/headshot.png";
+    return null;
   });
   const [avatarId, setAvatarId] = useState(() => {
     if (typeof window !== "undefined") {
@@ -108,6 +109,20 @@ const LiveAvatarSessionComponent: React.FC<{
         preset.avatarId === avatarId && preset.contextId === contextId,
     );
   }, [avatarId, contextId]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const hasResetBackground = localStorage.getItem(BACKGROUND_RESET_KEY);
+    if (hasResetBackground === "true") {
+      return;
+    }
+
+    localStorage.removeItem("avatarBackgroundImage");
+    setBackgroundImage(null);
+    localStorage.setItem(BACKGROUND_RESET_KEY, "true");
+  }, []);
 
   useEffect(() => {
     if (sessionState === SessionState.DISCONNECTED) {
@@ -398,7 +413,7 @@ const LiveAvatarSessionComponent: React.FC<{
                 autoPlay
                 playsInline
                 muted={false}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain bg-black"
               />
               {isConnecting && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">

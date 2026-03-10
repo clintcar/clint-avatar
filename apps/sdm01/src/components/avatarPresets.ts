@@ -35,4 +35,9 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
     avatarId: "7b888024-f8c9-4205-95e1-78ce01497bda",
     contextId: "8c22740f-7db4-417d-a44e-31ed61ba3d3c",
   },
+  {
+    name: "Ben PATPCE",
+    avatarId: "bb1f6ebc-b388-4a39-9e2b-8df618e0377c",
+    contextId: "cd264dbb-9823-4727-84bb-ccd752ce9043",
+  },
 ];
