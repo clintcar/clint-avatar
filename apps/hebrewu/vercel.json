@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm turbo build --filter=menopause01",
+  "buildCommand": "pnpm turbo build --filter=hebrewu",
   "outputDirectory": ".next",
   "devCommand": "pnpm run dev",
   "installCommand": "pnpm install --frozen-lockfile",
