@@ -97,7 +97,7 @@ export const LiveAvatarDemo = () => {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-4">
+    <div className="w-full h-full flex flex-col items-center justify-center gap-4 px-2 xl:px-4">
       {!sessionToken ? (
         <>
           {error && (

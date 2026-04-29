@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   LiveAvatarContextProvider,
+  useChatHistory,
   useSession,
   useTextChat,
   useVoiceChat,
@@ -11,6 +12,7 @@ import { SessionState, ConnectionQuality } from "@heygen/liveavatar-web-sdk";
 import { useAvatarActions } from "../liveavatar/useAvatarActions";
 import { Button } from "./ui/Button";
 import { AvatarConfig } from "./AvatarConfig";
+import { ClinicalDashboard } from "./ClinicalDashboard";
 import { MessageHistory } from "./MessageHistory";
 import { LoadingIcon, FullscreenIcon, MicIcon, MicOffIcon } from "./ui/Icons";
 import { CONTEXT_ID, LANGUAGE } from "../../app/api/secrets";
@@ -89,6 +91,7 @@ const LiveAvatarSessionComponent: React.FC<{
   } = useVoiceChat();
 
   const { repeat } = useAvatarActions(mode);
+  const messages = useChatHistory();
 
   const { sendMessage } = useTextChat(mode);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -272,281 +275,322 @@ const LiveAvatarSessionComponent: React.FC<{
   const shouldShowVideo = isConnected || isConnecting;
 
   return (
-    <div className="w-full flex flex-col gap-8 max-w-[1080px]">
-      <div className="flex flex-col rounded-xl bg-zinc-900 overflow-hidden">
-        {isInactive && (
-          <div className="flex flex-row justify-center items-center gap-4 p-4 border-b border-zinc-700">
-            {mode === "FULL" && (
-              <>
-                <Button onClick={handleStartVoiceChat}>Start Voice Chat</Button>
-                <Button onClick={handleStartTextChat}>Start Text Chat</Button>
-              </>
-            )}
-            {mode === "CUSTOM" && (
-              <Button onClick={() => startSession()}>Start Session</Button>
-            )}
-          </div>
-        )}
-        {(isConnected || isConnecting) && (
-          <div className="flex flex-row justify-center items-center gap-4 p-4 border-b border-zinc-700">
-            <Button
-              onClick={handleStopChat}
-              className="bg-red-600 hover:bg-red-700 text-white"
-            >
-              Stop Chat
-            </Button>
-          </div>
-        )}
-        <div
-          ref={containerRef}
-          className="relative w-full aspect-video overflow-hidden flex flex-col items-center justify-center bg-black"
-        >
-          {shouldShowVideo ? (
-            <>
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted={false}
-                className="w-full h-full object-contain"
-              />
-              {isConnecting && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-                  <LoadingIcon size={32} />
-                </div>
-              )}
-              {timeRemaining !== null && timeRemaining > 0 && isConnected && (
-                <div className="absolute bottom-16 left-3 bg-black bg-opacity-75 text-white rounded-lg px-3 py-2 text-sm">
-                  Time remaining: {Math.floor(timeRemaining / 60)}:
-                  {(timeRemaining % 60).toString().padStart(2, "0")}
-                </div>
-              )}
-              {connectionQuality !== ConnectionQuality.UNKNOWN &&
-                isConnected && (
-                  <div className="absolute bottom-3 left-3 bg-black bg-opacity-75 text-white rounded-lg px-3 py-2 text-sm">
-                    Connection Quality: {connectionQuality}
-                  </div>
+    <div className="w-full max-w-[1700px] mx-auto px-2 xl:px-4">
+      <div className="w-full grid grid-cols-1 xl:grid-cols-[minmax(0,1.45fr)_minmax(420px,0.95fr)] gap-6 items-start">
+        <div className="w-full min-w-0 flex flex-col gap-8">
+          <div className="flex flex-col rounded-xl bg-zinc-900 overflow-hidden">
+            {isInactive && (
+              <div className="flex flex-row justify-center items-center gap-4 p-4 border-b border-zinc-700">
+                {mode === "FULL" && (
+                  <>
+                    <Button onClick={handleStartVoiceChat}>
+                      Start Voice Chat
+                    </Button>
+                    <Button onClick={handleStartTextChat}>
+                      Start Text Chat
+                    </Button>
+                  </>
                 )}
-              {isConnected && (
-                <button
-                  aria-label="Toggle Full Screen"
-                  onClick={toggleFullscreen}
-                  className="absolute bottom-4 right-4 bg-zinc-900 bg-opacity-75 text-white p-2 rounded-md hover:bg-opacity-90"
+                {mode === "CUSTOM" && (
+                  <Button onClick={() => startSession()}>Start Session</Button>
+                )}
+              </div>
+            )}
+            {(isConnected || isConnecting) && (
+              <div className="flex flex-row justify-center items-center gap-4 p-4 border-b border-zinc-700">
+                <Button
+                  onClick={handleStopChat}
+                  className="bg-red-600 hover:bg-red-700 text-white"
                 >
-                  <FullscreenIcon size={20} />
-                </button>
+                  Stop Chat
+                </Button>
+              </div>
+            )}
+            <div
+              ref={containerRef}
+              className="relative w-full aspect-video overflow-hidden flex flex-col items-center justify-center bg-black"
+            >
+              {shouldShowVideo ? (
+                <>
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted={false}
+                    className="w-full h-full object-contain"
+                  />
+                  {isConnecting && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                      <LoadingIcon size={32} />
+                    </div>
+                  )}
+                  {timeRemaining !== null &&
+                    timeRemaining > 0 &&
+                    isConnected && (
+                      <div className="absolute bottom-16 left-3 bg-black bg-opacity-75 text-white rounded-lg px-3 py-2 text-sm">
+                        Time remaining: {Math.floor(timeRemaining / 60)}:
+                        {(timeRemaining % 60).toString().padStart(2, "0")}
+                      </div>
+                    )}
+                  {connectionQuality !== ConnectionQuality.UNKNOWN &&
+                    isConnected && (
+                      <div className="absolute bottom-3 left-3 bg-black bg-opacity-75 text-white rounded-lg px-3 py-2 text-sm">
+                        Connection Quality: {connectionQuality}
+                      </div>
+                    )}
+                  {isConnected && (
+                    <button
+                      aria-label="Toggle Full Screen"
+                      onClick={toggleFullscreen}
+                      className="absolute bottom-4 right-4 bg-zinc-900 bg-opacity-75 text-white p-2 rounded-md hover:bg-opacity-90"
+                    >
+                      <FullscreenIcon size={20} />
+                    </button>
+                  )}
+                  {isConnected && (
+                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3">
+                      <div className="bg-black bg-opacity-75 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+                        <div
+                          className={`w-3 h-3 rounded-full ${
+                            isAvatarTalking
+                              ? "bg-red-500 animate-pulse"
+                              : "bg-green-500"
+                          }`}
+                        ></div>
+                        {isAvatarTalking
+                          ? "Avatar is speaking"
+                          : "Avatar is listening"}
+                      </div>
+                      {mode === "FULL" && isVoiceChatMode && isActive && (
+                        <Button
+                          className="!p-2 relative"
+                          disabled={isLoading}
+                          onClick={() => {
+                            if (isMuted) {
+                              unmute();
+                            } else {
+                              mute();
+                            }
+                          }}
+                        >
+                          <div
+                            className={`absolute left-0 top-0 rounded-lg border-2 border-[#CFB87C] w-full h-full ${
+                              isUserTalking ? "animate-ping" : ""
+                            }`}
+                          />
+                          {isLoading ? (
+                            <LoadingIcon className="animate-spin" size={20} />
+                          ) : isMuted ? (
+                            <MicOffIcon size={20} />
+                          ) : (
+                            <MicIcon size={20} />
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </>
+              ) : (
+                backgroundImage && (
+                  <img
+                    src={backgroundImage}
+                    alt="Background"
+                    className="w-full h-full object-cover"
+                  />
+                )
               )}
-              {isConnected && (
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3">
-                  <div className="bg-black bg-opacity-75 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">
-                    <div
-                      className={`w-3 h-3 rounded-full ${
-                        isAvatarTalking
-                          ? "bg-red-500 animate-pulse"
-                          : "bg-green-500"
-                      }`}
-                    ></div>
-                    {isAvatarTalking
-                      ? "Avatar is speaking"
-                      : "Avatar is listening"}
-                  </div>
-                  {mode === "FULL" && isVoiceChatMode && isActive && (
-                    <Button
-                      className="!p-2 relative"
-                      disabled={isLoading}
-                      onClick={() => {
-                        if (isMuted) {
-                          unmute();
-                        } else {
-                          mute();
+            </div>
+            {isInactive && (
+              <div className="border-t border-zinc-700">
+                <div
+                  className="w-full cursor-pointer select-none p-4 text-sm font-medium bg-zinc-800 text-white"
+                  onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                >
+                  {isSettingsOpen ? "▲ Settings" : "▼ Settings"}
+                </div>
+                {isSettingsOpen && (
+                  <div className="p-4 bg-zinc-800">
+                    <AvatarConfig
+                      avatarId={avatarId}
+                      onAvatarIdChange={(value) => {
+                        setAvatarId(value);
+                        if (typeof window !== "undefined") {
+                          if (value) {
+                            localStorage.setItem("avatarIdOverride", value);
+                          } else {
+                            localStorage.removeItem("avatarIdOverride");
+                          }
                         }
                       }}
+                      language={language}
+                      onLanguageChange={(value) => {
+                        setLanguage(value);
+                        if (typeof window !== "undefined") {
+                          localStorage.setItem("avatarLanguage", value);
+                        }
+                      }}
+                      emotion={emotion}
+                      onEmotionChange={(value) => {
+                        setEmotion(value);
+                        if (typeof window !== "undefined") {
+                          localStorage.setItem("avatarEmotion", value);
+                        }
+                      }}
+                      contextId={contextId}
+                      onContextIdChange={(value) => {
+                        setContextId(value);
+                        if (typeof window !== "undefined") {
+                          if (value) {
+                            localStorage.setItem("avatarContextId", value);
+                          } else {
+                            localStorage.removeItem("avatarContextId");
+                          }
+                        }
+                      }}
+                      timerDuration={timerDuration}
+                      onTimerDurationChange={setTimerDuration}
+                      backgroundImage={backgroundImage}
+                      onBackgroundImageChange={(image) => {
+                        setBackgroundImage(image);
+                        if (typeof window !== "undefined") {
+                          if (image) {
+                            localStorage.setItem(
+                              "avatarBackgroundImage",
+                              image,
+                            );
+                          } else {
+                            localStorage.removeItem("avatarBackgroundImage");
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+            {(isConnected || isConnecting) && (
+              <div className="flex flex-col gap-6 items-center justify-center p-8 border-t border-zinc-700 w-full">
+                {mode === "FULL" && (
+                  <div className="flex flex-row gap-2 items-center">
+                    <button
+                      className={`px-4 py-2 rounded-lg text-sm ${
+                        isVoiceChatMode
+                          ? "bg-zinc-300 text-black"
+                          : "bg-zinc-700 text-white"
+                      }`}
+                      onClick={() => {
+                        setIsVoiceChatMode(true);
+                        if (
+                          !isActive &&
+                          sessionState === SessionState.CONNECTED
+                        ) {
+                          start();
+                        }
+                      }}
+                      disabled={isLoading}
                     >
-                      <div
-                        className={`absolute left-0 top-0 rounded-lg border-2 border-[#CFB87C] w-full h-full ${
-                          isUserTalking ? "animate-ping" : ""
-                        }`}
-                      />
-                      {isLoading ? (
-                        <LoadingIcon className="animate-spin" size={20} />
-                      ) : isMuted ? (
-                        <MicOffIcon size={20} />
-                      ) : (
-                        <MicIcon size={20} />
-                      )}
+                      Voice Chat
+                    </button>
+                    <button
+                      className={`px-4 py-2 rounded-lg text-sm ${
+                        !isVoiceChatMode
+                          ? "bg-zinc-300 text-black"
+                          : "bg-zinc-700 text-white"
+                      }`}
+                      onClick={() => {
+                        setIsVoiceChatMode(false);
+                        if (isActive) {
+                          stop();
+                        }
+                      }}
+                      disabled={isLoading}
+                    >
+                      Text Chat
+                    </button>
+                  </div>
+                )}
+                {!isVoiceChatMode && mode === "FULL" && (
+                  <div className="flex flex-row gap-2 items-end w-full max-w-[600px]">
+                    <input
+                      type="text"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleSendMessage();
+                        }
+                      }}
+                      className="flex-1 bg-white text-black px-4 py-2 rounded-lg"
+                      placeholder="Type a message..."
+                    />
+                    <Button className="!p-2" onClick={handleSendMessage}>
+                      Send
                     </Button>
-                  )}
-                </div>
-              )}
-            </>
-          ) : (
-            backgroundImage && (
-              <img
-                src={backgroundImage}
-                alt="Background"
-                className="w-full h-full object-cover"
-              />
-            )
+                  </div>
+                )}
+                {mode === "CUSTOM" && (
+                  <div className="flex flex-row gap-2 items-end w-full max-w-[600px]">
+                    <input
+                      type="text"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleSendMessage();
+                        }
+                      }}
+                      className="flex-1 bg-white text-black px-4 py-2 rounded-lg"
+                      placeholder="Type a message..."
+                    />
+                    <Button className="!p-2" onClick={handleSendMessage}>
+                      Send
+                    </Button>
+                    <Button
+                      className="!p-2"
+                      onClick={() => {
+                        repeat(message);
+                        setMessage("");
+                      }}
+                    >
+                      Repeat
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          {isConnected && (
+            <div className="w-full flex flex-col">
+              <MessageHistory />
+            </div>
           )}
         </div>
-        {isInactive && (
-          <div className="border-t border-zinc-700">
-            <div
-              className="w-full cursor-pointer select-none p-4 text-sm font-medium bg-zinc-800 text-white"
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+        <div className="w-full xl:sticky xl:top-4 flex flex-col gap-3">
+          <ClinicalDashboard
+            isSessionActive={isConnected || isConnecting}
+            chatMessages={messages}
+          />
+          <div className="flex flex-row justify-end items-center gap-3 px-1">
+            <a
+              href="https://www.linkedin.com/in/clintcarlson/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-zinc-700 hover:text-zinc-900 text-sm font-medium transition-colors"
             >
-              {isSettingsOpen ? "▲ Settings" : "▼ Settings"}
-            </div>
-            {isSettingsOpen && (
-              <div className="p-4 bg-zinc-800">
-                <AvatarConfig
-                  avatarId={avatarId}
-                  onAvatarIdChange={(value) => {
-                    setAvatarId(value);
-                    if (typeof window !== "undefined") {
-                      if (value) {
-                        localStorage.setItem("avatarIdOverride", value);
-                      } else {
-                        localStorage.removeItem("avatarIdOverride");
-                      }
-                    }
-                  }}
-                  language={language}
-                  onLanguageChange={(value) => {
-                    setLanguage(value);
-                    if (typeof window !== "undefined") {
-                      localStorage.setItem("avatarLanguage", value);
-                    }
-                  }}
-                  emotion={emotion}
-                  onEmotionChange={(value) => {
-                    setEmotion(value);
-                    if (typeof window !== "undefined") {
-                      localStorage.setItem("avatarEmotion", value);
-                    }
-                  }}
-                  contextId={contextId}
-                  onContextIdChange={(value) => {
-                    setContextId(value);
-                    if (typeof window !== "undefined") {
-                      if (value) {
-                        localStorage.setItem("avatarContextId", value);
-                      } else {
-                        localStorage.removeItem("avatarContextId");
-                      }
-                    }
-                  }}
-                  timerDuration={timerDuration}
-                  onTimerDurationChange={setTimerDuration}
-                  backgroundImage={backgroundImage}
-                  onBackgroundImageChange={(image) => {
-                    setBackgroundImage(image);
-                    if (typeof window !== "undefined") {
-                      if (image) {
-                        localStorage.setItem("avatarBackgroundImage", image);
-                      } else {
-                        localStorage.removeItem("avatarBackgroundImage");
-                      }
-                    }
-                  }}
-                />
-              </div>
-            )}
+              Director: Clint Carlson
+            </a>
+            <span className="text-zinc-700 text-sm">|</span>
+            <a
+              href="https://www.linkedin.com/in/clintcarlson/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-zinc-700 hover:text-zinc-900 text-sm font-medium transition-colors"
+            >
+              Contact
+            </a>
           </div>
-        )}
-        {(isConnected || isConnecting) && (
-          <div className="flex flex-col gap-6 items-center justify-center p-8 border-t border-zinc-700 w-full">
-            {mode === "FULL" && (
-              <div className="flex flex-row gap-2 items-center">
-                <button
-                  className={`px-4 py-2 rounded-lg text-sm ${
-                    isVoiceChatMode
-                      ? "bg-zinc-300 text-black"
-                      : "bg-zinc-700 text-white"
-                  }`}
-                  onClick={() => {
-                    setIsVoiceChatMode(true);
-                    if (!isActive && sessionState === SessionState.CONNECTED) {
-                      start();
-                    }
-                  }}
-                  disabled={isLoading}
-                >
-                  Voice Chat
-                </button>
-                <button
-                  className={`px-4 py-2 rounded-lg text-sm ${
-                    !isVoiceChatMode
-                      ? "bg-zinc-300 text-black"
-                      : "bg-zinc-700 text-white"
-                  }`}
-                  onClick={() => {
-                    setIsVoiceChatMode(false);
-                    if (isActive) {
-                      stop();
-                    }
-                  }}
-                  disabled={isLoading}
-                >
-                  Text Chat
-                </button>
-              </div>
-            )}
-            {!isVoiceChatMode && mode === "FULL" && (
-              <div className="flex flex-row gap-2 items-end w-full max-w-[600px]">
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleSendMessage();
-                    }
-                  }}
-                  className="flex-1 bg-white text-black px-4 py-2 rounded-lg"
-                  placeholder="Type a message..."
-                />
-                <Button className="!p-2" onClick={handleSendMessage}>
-                  Send
-                </Button>
-              </div>
-            )}
-            {mode === "CUSTOM" && (
-              <div className="flex flex-row gap-2 items-end w-full max-w-[600px]">
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleSendMessage();
-                    }
-                  }}
-                  className="flex-1 bg-white text-black px-4 py-2 rounded-lg"
-                  placeholder="Type a message..."
-                />
-                <Button className="!p-2" onClick={handleSendMessage}>
-                  Send
-                </Button>
-                <Button
-                  className="!p-2"
-                  onClick={() => {
-                    repeat(message);
-                    setMessage("");
-                  }}
-                >
-                  Repeat
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-      {isConnected && (
-        <div className="w-full flex flex-col">
-          <MessageHistory />
         </div>
-      )}
+      </div>
     </div>
   );
 };

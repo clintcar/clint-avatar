@@ -4,8 +4,9 @@ import NavBar from "../src/components/NavBar";
 
 export const metadata: Metadata = {
   title: {
-    default: "Meet Judy - Live AI Avatar | Author: Clint Carlson",
-    template: `%s - Meet Judy - Live AI Avatar`,
+    default:
+      "Judy - Live AI Avatar for Patient Simulation | Author: Clint Carlson",
+    template: `%s - Judy - Live AI Avatar for Patient Simulation`,
   },
 };
 

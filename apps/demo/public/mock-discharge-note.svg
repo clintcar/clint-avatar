@@ -1,0 +1,14 @@
+<svg width="560" height="320" viewBox="0 0 560 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="560" height="320" fill="#0F172A"/>
+  <rect x="110" y="24" width="340" height="272" rx="10" fill="#F9FAFB"/>
+  <text x="132" y="54" fill="#111827" font-family="Arial, sans-serif" font-size="14">Discharge Summary (Mock)</text>
+  <rect x="132" y="72" width="220" height="8" rx="2" fill="#D1D5DB"/>
+  <rect x="132" y="96" width="290" height="8" rx="2" fill="#E5E7EB"/>
+  <rect x="132" y="114" width="272" height="8" rx="2" fill="#E5E7EB"/>
+  <rect x="132" y="132" width="280" height="8" rx="2" fill="#E5E7EB"/>
+  <rect x="132" y="166" width="140" height="8" rx="2" fill="#FCA5A5"/>
+  <rect x="132" y="184" width="250" height="8" rx="2" fill="#E5E7EB"/>
+  <rect x="132" y="202" width="238" height="8" rx="2" fill="#E5E7EB"/>
+  <rect x="132" y="236" width="160" height="8" rx="2" fill="#93C5FD"/>
+  <rect x="132" y="254" width="260" height="8" rx="2" fill="#E5E7EB"/>
+</svg>
