@@ -20,6 +20,7 @@
   "scripts": {
     "build": "turbo run build",
     "demo": "turbo run dev --filter=demo",
+    "sdm-consent": "turbo run dev --filter=sdm-consent",
     "pop": "turbo run dev --filter=pop",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
