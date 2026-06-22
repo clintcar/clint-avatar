@@ -22,6 +22,7 @@
     "demo": "turbo run dev --filter=demo",
     "sdm-consent": "turbo run dev --filter=sdm-consent",
     "pop": "turbo run dev --filter=pop",
+    "pubhealth": "turbo run dev --filter=pubhealth",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "prettier": "prettier --write \"**/*.{ts,tsx,md}\"",
