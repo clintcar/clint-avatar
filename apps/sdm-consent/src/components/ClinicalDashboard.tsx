@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useMemo, useState } from "react";
+import { ClinicalImagePreview } from "./ClinicalImagePreview";
 import {
   MessageSender,
   type LiveAvatarSessionMessage,
@@ -638,35 +638,37 @@ export function ClinicalDashboard({
   };
 
   return (
-    <aside className="w-full rounded-xl bg-zinc-900 border border-zinc-800 overflow-hidden">
-      <div className="px-4 py-3 border-b border-zinc-800">
-        <h2 className="text-sm font-semibold text-zinc-100">
-          Clinical Dashboard
-        </h2>
-        <p className="text-xs text-zinc-400 mt-1">
-          Request case data to support shared decision-making and informed
-          consent.
-        </p>
+    <aside className="w-full rounded-xl bg-zinc-900 border border-zinc-800">
+      <div className="rounded-t-xl overflow-hidden border-b border-zinc-800">
+        <div className="px-4 py-3 border-b border-zinc-800">
+          <h2 className="text-sm font-semibold text-zinc-100">
+            Clinical Dashboard
+          </h2>
+          <p className="text-xs text-zinc-400 mt-1">
+            Request case data to support shared decision-making and informed
+            consent.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap border-b border-zinc-800">
+          {DASHBOARD_TABS.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 min-w-[88px] px-2 py-2 text-[11px] leading-tight text-center border-r last:border-r-0 border-zinc-800 transition-colors ${
+                activeTab === tab
+                  ? "bg-zinc-700 text-zinc-100"
+                  : "bg-zinc-900 text-zinc-400 hover:bg-zinc-800"
+              }`}
+            >
+              {TAB_LABELS[tab]}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="flex flex-wrap border-b border-zinc-800">
-        {DASHBOARD_TABS.map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setActiveTab(tab)}
-            className={`flex-1 min-w-[88px] px-2 py-2 text-[11px] leading-tight text-center border-r last:border-r-0 border-zinc-800 transition-colors ${
-              activeTab === tab
-                ? "bg-zinc-700 text-zinc-100"
-                : "bg-zinc-900 text-zinc-400 hover:bg-zinc-800"
-            }`}
-          >
-            {TAB_LABELS[tab]}
-          </button>
-        ))}
-      </div>
-
-      <div className="p-4 flex flex-col gap-3">
+      <div className="p-4 flex flex-col gap-3 min-w-0">
         {!isSessionActive && (
           <div className="rounded-md border border-zinc-700 bg-zinc-800 p-3 text-xs text-zinc-300">
             Preview mode is active. You can request mock data before starting
@@ -820,17 +822,12 @@ export function ClinicalDashboard({
                     </ul>
                   </div>
                   {item.mockResponse.imageSrc && (
-                    <div className="rounded-md border border-zinc-700 overflow-hidden bg-zinc-900">
-                      <Image
-                        src={item.mockResponse.imageSrc}
-                        alt={
-                          item.mockResponse.imageAlt || "Mock clinical artifact"
-                        }
-                        width={560}
-                        height={320}
-                        className="w-full h-auto"
-                      />
-                    </div>
+                    <ClinicalImagePreview
+                      src={item.mockResponse.imageSrc}
+                      alt={
+                        item.mockResponse.imageAlt || "Clinical dashboard image"
+                      }
+                    />
                   )}
                 </div>
               )}
