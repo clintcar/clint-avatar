@@ -13,6 +13,7 @@
   "dependencies": {
     "@heygen/liveavatar-web-sdk": "*",
     "autoprefixer": "10.4.19",
+    "jspdf": "^4.2.1",
     "next": "^15.5.7",
     "postcss": "8.4.38",
     "react": "^19.1.0",

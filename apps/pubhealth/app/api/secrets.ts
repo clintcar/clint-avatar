@@ -8,4 +8,4 @@ export const LANGUAGE = "en";
 
 // CUSTOM MODE Customizations
 export const ELEVENLABS_API_KEY = "YOUR_ELEVENLABS_API_KEY";
-export const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY";
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY ?? "";

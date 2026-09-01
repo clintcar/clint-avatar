@@ -1,0 +1,20 @@
+---
+description: How to build Conversation Assessment Reports for LiveAvatar simulations
+globs: apps/**
+alwaysApply: false
+---
+
+# Conversation Assessment Reports
+
+When adding a debrief or report to a LiveAvatar simulation in this repo:
+
+- Add a **Conversation Assessment Report** button (not "Generate PDF") on the transcript panel.
+- The report is a **single PDF** with the chat transcript plus an assessment breakdown.
+- Load the assessment from the **avatar Context document** for that scenario (feedback categories, look-fors, closing coaching prompts). Do not invent a generic scored rubric.
+- Follow the Context: **no scores, grades, ratings, points, or percentages** if the Context forbids them.
+- Ground every note in the **actual conversation**: cite Context look-fors and quote learner/avatar turns.
+- Generate the report **locally from the transcript and Context**. Do not require OpenAI or another LLM API.
+- Keep the transcript after the session ends so the report can still be generated.
+- Encode each avatar's Context rubric separately.
+
+Reference implementation: `apps/pubhealth` (`app/lib/pubhealthContexts.ts`, `src/lib/assessFromContext.ts`, `src/lib/generateAssessmentPdf.ts`).

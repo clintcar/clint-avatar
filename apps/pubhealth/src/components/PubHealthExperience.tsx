@@ -9,6 +9,7 @@ export function PubHealthExperience() {
       {PUBHEALTH_AVATARS.map((avatar) => (
         <PubHealthAvatarSection
           key={avatar.id}
+          scenarioId={avatar.id}
           title={avatar.title}
           avatarId={avatar.avatarId}
           contextId={avatar.contextId}

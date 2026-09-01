@@ -12,6 +12,7 @@ import { Button } from "./ui/Button";
 import { ClinicalDashboard, TranscriptPanel } from "./ClinicalDashboard";
 import { LoadingIcon, FullscreenIcon, MicIcon, MicOffIcon } from "./ui/Icons";
 import { LANGUAGE } from "../../app/api/secrets";
+import type { LiveAvatarSessionMessage } from "../liveavatar/types";
 
 type SessionConfig = {
   avatarId: string;
@@ -20,7 +21,10 @@ type SessionConfig = {
 
 const PubHealthAvatarSessionInner: React.FC<{
   onSessionEnded: () => void;
-}> = ({ onSessionEnded }) => {
+  title: string;
+  scenarioId: string;
+  onMessagesChange?: (messages: LiveAvatarSessionMessage[]) => void;
+}> = ({ onSessionEnded, title, scenarioId, onMessagesChange }) => {
   const [message, setMessage] = useState("");
   const [isVoiceChatMode, setIsVoiceChatMode] = useState(true);
   const [hasStarted, setHasStarted] = useState(false);
@@ -275,7 +279,12 @@ const PubHealthAvatarSessionInner: React.FC<{
           </div>
         )}
       </div>
-      <ClinicalDashboard compact />
+      <ClinicalDashboard
+        compact
+        title={title}
+        scenarioId={scenarioId}
+        onMessagesChange={onMessagesChange}
+      />
     </div>
   );
 };
@@ -283,10 +292,24 @@ const PubHealthAvatarSessionInner: React.FC<{
 export const PubHealthAvatarSession: React.FC<{
   sessionAccessToken: string;
   onSessionEnded: () => void;
-}> = ({ sessionAccessToken, onSessionEnded }) => {
+  title: string;
+  scenarioId: string;
+  onMessagesChange?: (messages: LiveAvatarSessionMessage[]) => void;
+}> = ({
+  sessionAccessToken,
+  onSessionEnded,
+  title,
+  scenarioId,
+  onMessagesChange,
+}) => {
   return (
     <LiveAvatarContextProvider sessionAccessToken={sessionAccessToken}>
-      <PubHealthAvatarSessionInner onSessionEnded={onSessionEnded} />
+      <PubHealthAvatarSessionInner
+        onSessionEnded={onSessionEnded}
+        title={title}
+        scenarioId={scenarioId}
+        onMessagesChange={onMessagesChange}
+      />
     </LiveAvatarContextProvider>
   );
 };
@@ -312,11 +335,13 @@ async function fetchSessionToken(config: SessionConfig) {
 }
 
 export function PubHealthAvatarSection({
+  scenarioId,
   title,
   avatarId,
   contextId,
   previewImage,
 }: {
+  scenarioId: string;
   title: string;
   avatarId: string;
   contextId: string;
@@ -325,11 +350,15 @@ export function PubHealthAvatarSection({
   const [sessionToken, setSessionToken] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isStarting, setIsStarting] = useState(false);
+  const [savedMessages, setSavedMessages] = useState<
+    LiveAvatarSessionMessage[]
+  >([]);
   const config = { avatarId, contextId };
 
   const handleStartChat = useCallback(async () => {
     setIsStarting(true);
     setError(null);
+    setSavedMessages([]);
     try {
       const token = await fetchSessionToken(config);
       setSessionToken(token);
@@ -344,6 +373,15 @@ export function PubHealthAvatarSection({
     setSessionToken("");
   }, []);
 
+  const handleMessagesChange = useCallback(
+    (messages: LiveAvatarSessionMessage[]) => {
+      if (messages.length > 0) {
+        setSavedMessages(messages);
+      }
+    },
+    [],
+  );
+
   return (
     <section className="w-full rounded-xl border border-zinc-300 overflow-hidden bg-white shadow-sm">
       <div className="px-4 py-3 bg-zinc-100 border-b border-zinc-300">
@@ -355,6 +393,9 @@ export function PubHealthAvatarSection({
           key={sessionToken}
           sessionAccessToken={sessionToken}
           onSessionEnded={handleSessionEnded}
+          title={title}
+          scenarioId={scenarioId}
+          onMessagesChange={handleMessagesChange}
         />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-4 bg-white items-stretch">
@@ -379,7 +420,12 @@ export function PubHealthAvatarSection({
               </div>
             </div>
           </div>
-          <TranscriptPanel messages={[]} compact />
+          <TranscriptPanel
+            messages={savedMessages}
+            compact
+            title={title}
+            scenarioId={scenarioId}
+          />
         </div>
       )}
     </section>
