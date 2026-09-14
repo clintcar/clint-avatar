@@ -7,9 +7,10 @@ import {
   type ContextRubricAssessment,
 } from "./assessTranscript";
 
-const GOLD = { r: 207, g: 184, b: 124 };
-const INK = { r: 24, g: 24, b: 27 };
-const MUTED = { r: 82, g: 82, b: 91 };
+const TEAL = { r: 0, g: 106, b: 134 };
+const GREEN = { r: 122, g: 154, b: 45 };
+const INK = { r: 35, g: 35, b: 35 };
+const MUTED = { r: 95, g: 102, b: 107 };
 const PAGE_MARGIN = 48;
 const PAGE_BOTTOM = 36;
 
@@ -107,8 +108,10 @@ export async function buildAssessmentPdf({
     y += gap;
   };
 
-  doc.setFillColor(GOLD.r, GOLD.g, GOLD.b);
+  doc.setFillColor(TEAL.r, TEAL.g, TEAL.b);
   doc.rect(0, 0, pageWidth, 10, "F");
+  doc.setFillColor(GREEN.r, GREEN.g, GREEN.b);
+  doc.rect(0, 10, pageWidth, 4, "F");
 
   writeWrapped("Centers for Health, Work & Environment", {
     size: 11,
@@ -155,12 +158,14 @@ export async function buildAssessmentPdf({
 
   for (const category of assessment.categories) {
     ensureSpace(36);
-    doc.setFillColor(GOLD.r, GOLD.g, GOLD.b);
+    doc.setFillColor(TEAL.r, TEAL.g, TEAL.b);
     doc.rect(PAGE_MARGIN, y - 12, contentWidth, 20, "F");
+    doc.setFillColor(GREEN.r, GREEN.g, GREEN.b);
+    doc.rect(PAGE_MARGIN, y - 12, 5, 20, "F");
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
-    doc.setTextColor(INK.r, INK.g, INK.b);
-    doc.text(category.title, PAGE_MARGIN + 8, y);
+    doc.setTextColor(255, 255, 255);
+    doc.text(category.title, PAGE_MARGIN + 10, y);
     y += 16;
     writeWrapped(`Look-fors: ${category.lookFors.join("; ")}`, {
       size: 8,

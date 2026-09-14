@@ -1,13 +1,16 @@
 import "./globals.css";
 import { Metadata } from "next";
 import NavBar from "../src/components/NavBar";
+import SiteFooter from "../src/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: {
     default:
-      "Live Avatars - Centers for Health, Work & Environment Conversations | Author: Clint Carlson",
-    template: `%s - Live Avatars - Centers for Health, Work & Environment Conversations`,
+      "Live Avatar Conversations | Centers for Health, Work & Environment",
+    template: `%s | Centers for Health, Work & Environment`,
   },
+  description:
+    "Practice live conversations with policymakers, journalists, and community members at the Centers for Health, Work & Environment.",
 };
 
 export default function RootLayout({
@@ -17,13 +20,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white flex flex-col min-h-screen text-black">
-        <main className="relative flex flex-col gap-2 w-full">
-          <NavBar />
-          <div className="flex flex-col items-center flex-1 w-full py-4">
-            {children}
-          </div>
+      <body className="min-h-screen bg-white text-chwe-ink font-sans flex flex-col">
+        <a className="skip-link" href="#main">
+          Skip to conversation
+        </a>
+        <NavBar />
+        <main id="main" className="flex-1 bg-white">
+          {children}
         </main>
+        <SiteFooter />
       </body>
     </html>
   );

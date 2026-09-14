@@ -2,6 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --chwe-blue: #006a86;
+  --chwe-blue-dark: #004f66;
+  --chwe-blue-deep: #173b4a;
+  --chwe-green: #7a9a2d;
+  --chwe-green-dark: #617d20;
+  --ink: #232323;
+  --muted: #5f666b;
+  --line: #d8dde0;
+  --soft: #f4f6f6;
+  --white: #ffffff;
+  --shadow: 0 12px 30px rgba(20, 48, 60, 0.1);
+  --radius: 4px;
+  --content: 1240px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--chwe-blue);
+}
+
+a:hover,
+a:focus {
+  color: var(--chwe-blue-dark);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.7rem 1rem;
+  background: var(--white);
+  color: var(--ink);
+  z-index: 9999;
+  border: 2px solid var(--chwe-blue);
+}
+
+.chwe-shell {
+  width: min(calc(100% - 40px), var(--content));
+  margin: 0 auto;
+}
+
 .avatar-embed {
   display: inline-flex;
   flex-direction: column;
@@ -13,22 +78,27 @@
   width: 100%;
   max-width: 600px;
   aspect-ratio: 16 / 9;
-  border: 1px solid #d4d4d8;
+  border: 1px solid var(--line);
 }
 
 .avatar-embed-button {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 17px;
+  font-size: 0.92rem;
+  font-weight: 700;
   cursor: pointer;
-  border: 1px solid #d4d4d8;
-  border-radius: 6px;
-  background: #ffffff;
+  border: 0;
+  border-radius: 3px;
+  background: var(--chwe-blue);
+  color: var(--white);
 }
 
-.avatar-embed-button:hover {
-  background: #f4f4f5;
+.avatar-embed-button:hover,
+.avatar-embed-button:focus {
+  background: var(--chwe-blue-dark);
 }
 
 .avatar-embed:fullscreen {
@@ -52,4 +122,10 @@
   max-width: none;
   height: calc(100vh - 64px);
   border: none;
+}
+
+@media (max-width: 520px) {
+  .chwe-shell {
+    width: min(calc(100% - 28px), var(--content));
+  }
 }

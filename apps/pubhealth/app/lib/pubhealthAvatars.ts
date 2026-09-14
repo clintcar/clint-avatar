@@ -1,6 +1,9 @@
 export type PubHealthAvatarConfig = {
   id: string;
   title: string;
+  name: string;
+  kicker: string;
+  intro: string;
   avatarId: string;
   contextId: string;
   previewImage: string;
@@ -10,6 +13,9 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
   {
     id: "policymaker-jessica-newby",
     title: "Speaking with Policymakers - Representative Jessica Newby",
+    name: "Jessica Newby",
+    kicker: "Policymaker scenario",
+    intro: "Practice a live conversation with Representative Jessica Newby.",
     avatarId: "bf00036b-558a-44b5-b2ff-1e3cec0f4ceb",
     contextId: "c6376529-37e9-46f2-8cff-9edca594f739",
     previewImage:
@@ -18,6 +24,9 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
   {
     id: "journalist-henry-hook",
     title: "Speaking with Journalist - Henry Hook",
+    name: "Henry Hook",
+    kicker: "Journalist scenario",
+    intro: "Practice a live conversation with journalist Henry Hook.",
     avatarId: "7b888024-f8c9-4205-95e1-78ce01497bda",
     contextId: "f1398d19-adfc-4271-897f-645e61df4247",
     previewImage:
@@ -26,6 +35,9 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
   {
     id: "community-skeptical-joann-jackson",
     title: "Speaking with Skeptical Curious Community member - Joann Jackson",
+    name: "Joann Jackson",
+    kicker: "Community conversation",
+    intro: "Practice a live conversation with community member Joann Jackson.",
     avatarId: "3f291b22-0267-4fb6-a25b-847fb63604b0",
     contextId: "5a1499f2-afbe-4177-b1d9-7b16d97e142d",
     previewImage:
@@ -34,6 +46,9 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
   {
     id: "community-confrontational-michelle-smith",
     title: "Speaking with Confrontational Community Member - Michelle Smith",
+    name: "Michelle Smith",
+    kicker: "Community town hall",
+    intro: "Practice a live conversation with community member Michelle Smith.",
     avatarId: "3f291b22-0267-4fb6-a25b-847fb63604b0",
     contextId: "87694914-a546-4682-b5d5-c636ceefd2ef",
     previewImage:

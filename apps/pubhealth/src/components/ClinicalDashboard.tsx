@@ -79,19 +79,21 @@ export function TranscriptPanel({
 
   return (
     <aside
-      className={`w-full rounded-xl bg-zinc-900 border border-zinc-800 overflow-hidden flex flex-col ${
+      className={`w-full overflow-hidden rounded-[4px] border border-chwe-line bg-chwe-soft flex flex-col ${
         compact ? "min-h-0 h-full" : "min-h-[420px]"
       }`}
     >
-      <div className="px-4 py-3 border-b border-zinc-800 flex items-start justify-between gap-3 shrink-0">
+      <div className="px-[18px] py-3.5 border-b border-chwe-line bg-white flex items-start justify-between gap-3 shrink-0">
         <div>
-          <h2 className="text-sm font-semibold text-zinc-100">Transcript</h2>
+          <h2 className="text-[0.95rem] font-bold text-chwe-ink">Transcript</h2>
           {!compact && (
-            <p className="text-xs text-zinc-400 mt-1">
+            <p className="text-xs text-chwe-muted mt-1">
               Conversation log for this session.
             </p>
           )}
-          {pdfError && <p className="text-xs text-red-300 mt-1">{pdfError}</p>}
+          {pdfError && (
+            <p className="text-xs text-[#a33a32] mt-1">{pdfError}</p>
+          )}
         </div>
         <div className="flex flex-col gap-2 shrink-0 max-w-[220px]">
           <Button
@@ -115,12 +117,12 @@ export function TranscriptPanel({
 
       <div
         ref={containerRef}
-        className={`flex-1 overflow-y-auto p-4 space-y-3 ${
+        className={`flex-1 overflow-y-auto p-4 space-y-3 bg-chwe-soft ${
           compact ? "min-h-[200px]" : "min-h-[320px] max-h-[calc(100vh-220px)]"
         }`}
       >
         {messages.length === 0 ? (
-          <p className="text-sm text-zinc-500 text-center py-8">
+          <p className="text-sm text-chwe-muted text-center py-8">
             No messages yet. Click Start Chat to begin the conversation.
           </p>
         ) : (
@@ -133,11 +135,17 @@ export function TranscriptPanel({
                   : "self-start items-start"
               }`}
             >
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-chwe-muted">
                 {new Date(message.timestamp).toLocaleString()} ·{" "}
                 {message.sender === MessageSender.AVATAR ? "Avatar" : "You"}
               </p>
-              <p className="text-sm text-zinc-100 bg-zinc-800 px-3 py-2 rounded-lg whitespace-pre-wrap">
+              <p
+                className={`text-sm px-3 py-2 rounded-[4px] whitespace-pre-wrap ${
+                  message.sender === MessageSender.USER
+                    ? "bg-chwe-blue text-white"
+                    : "bg-white text-chwe-ink border border-chwe-line"
+                }`}
+              >
                 {message.message}
               </p>
             </div>

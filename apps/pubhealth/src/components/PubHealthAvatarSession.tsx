@@ -127,21 +127,11 @@ const PubHealthAvatarSessionInner: React.FC<{
   }, []);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-4 bg-white items-stretch">
-      <div className="flex flex-col rounded-lg border border-zinc-300 overflow-hidden bg-zinc-900 min-w-0">
-        {(isConnected || isConnecting) && (
-          <div className="flex flex-row justify-center items-center gap-4 p-3 border-b border-zinc-700">
-            <Button
-              onClick={handleStopChat}
-              className="bg-red-600 hover:bg-red-700 text-white text-sm"
-            >
-              Stop Chat
-            </Button>
-          </div>
-        )}
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-stretch">
+      <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416] shadow-chwe">
         <div
           ref={containerRef}
-          className="relative w-full aspect-video overflow-hidden flex items-center justify-center bg-black"
+          className="relative w-full aspect-video overflow-hidden flex items-center justify-center bg-[#101416]"
         >
           {shouldShowVideo ? (
             <>
@@ -167,7 +157,7 @@ const PubHealthAvatarSessionInner: React.FC<{
                 <button
                   aria-label="Toggle Full Screen"
                   onClick={toggleFullscreen}
-                  className="absolute bottom-3 right-3 bg-zinc-900/75 text-white p-2 rounded-md hover:bg-zinc-900/90"
+                  className="absolute bottom-3 right-3 bg-black/70 text-white p-2 rounded-[3px] hover:bg-black/85"
                 >
                   <FullscreenIcon size={18} />
                 </button>
@@ -197,7 +187,7 @@ const PubHealthAvatarSessionInner: React.FC<{
                       }}
                     >
                       <div
-                        className={`absolute inset-0 rounded-lg border-2 border-[#CFB87C] ${
+                        className={`absolute inset-0 rounded-[3px] border-2 border-chwe-green ${
                           isUserTalking ? "animate-ping" : ""
                         }`}
                       />
@@ -219,65 +209,75 @@ const PubHealthAvatarSessionInner: React.FC<{
             </div>
           )}
         </div>
-        {isConnected && (
-          <div className="flex flex-col gap-3 items-center p-4 border-t border-zinc-700">
-            <div className="flex flex-row gap-2 items-center">
-              <button
-                type="button"
-                className={`px-3 py-1.5 rounded-lg text-xs ${
-                  isVoiceChatMode
-                    ? "bg-zinc-300 text-black"
-                    : "bg-zinc-700 text-white"
-                }`}
-                onClick={() => {
-                  setIsVoiceChatMode(true);
-                  if (!isActive) {
-                    void start();
-                  }
-                }}
-                disabled={isLoading}
-              >
-                Voice Chat
-              </button>
-              <button
-                type="button"
-                className={`px-3 py-1.5 rounded-lg text-xs ${
-                  !isVoiceChatMode
-                    ? "bg-zinc-300 text-black"
-                    : "bg-zinc-700 text-white"
-                }`}
-                onClick={() => {
-                  setIsVoiceChatMode(false);
-                  if (isActive) {
-                    stop();
-                  }
-                }}
-                disabled={isLoading}
-              >
-                Text Chat
-              </button>
-            </div>
-            {!isVoiceChatMode && (
-              <div className="flex flex-row gap-2 items-end w-full">
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleSendMessage();
+        <div className="flex flex-col gap-3 items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
+          {(isConnected || isConnecting) && (
+            <Button
+              onClick={handleStopChat}
+              className="bg-[#a33a32] hover:bg-[#862e28] focus:bg-[#862e28] text-white text-sm"
+            >
+              Stop Chat
+            </Button>
+          )}
+          {isConnected && (
+            <>
+              <div className="flex flex-row gap-2 items-center">
+                <button
+                  type="button"
+                  className={`px-3 py-1.5 rounded-[3px] text-xs font-bold ${
+                    isVoiceChatMode
+                      ? "bg-chwe-blue text-white"
+                      : "bg-white text-chwe-ink border border-chwe-line"
+                  }`}
+                  onClick={() => {
+                    setIsVoiceChatMode(true);
+                    if (!isActive) {
+                      void start();
                     }
                   }}
-                  className="flex-1 bg-white text-black px-3 py-2 rounded-lg text-sm"
-                  placeholder="Type a message..."
-                />
-                <Button className="!p-2 text-sm" onClick={handleSendMessage}>
-                  Send
-                </Button>
+                  disabled={isLoading}
+                >
+                  Voice Chat
+                </button>
+                <button
+                  type="button"
+                  className={`px-3 py-1.5 rounded-[3px] text-xs font-bold ${
+                    !isVoiceChatMode
+                      ? "bg-chwe-blue text-white"
+                      : "bg-white text-chwe-ink border border-chwe-line"
+                  }`}
+                  onClick={() => {
+                    setIsVoiceChatMode(false);
+                    if (isActive) {
+                      stop();
+                    }
+                  }}
+                  disabled={isLoading}
+                >
+                  Text Chat
+                </button>
               </div>
-            )}
-          </div>
-        )}
+              {!isVoiceChatMode && (
+                <div className="flex flex-row gap-2 items-end w-full">
+                  <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSendMessage();
+                      }
+                    }}
+                    className="flex-1 bg-white text-chwe-ink px-3 py-2 rounded-[3px] text-sm border border-chwe-line"
+                    placeholder="Type a message..."
+                  />
+                  <Button className="!p-2 text-sm" onClick={handleSendMessage}>
+                    Send
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
       <ClinicalDashboard
         compact
@@ -337,12 +337,18 @@ async function fetchSessionToken(config: SessionConfig) {
 export function PubHealthAvatarSection({
   scenarioId,
   title,
+  name,
+  kicker,
+  intro,
   avatarId,
   contextId,
   previewImage,
 }: {
   scenarioId: string;
   title: string;
+  name: string;
+  kicker: string;
+  intro: string;
   avatarId: string;
   contextId: string;
   previewImage: string;
@@ -383,34 +389,50 @@ export function PubHealthAvatarSection({
   );
 
   return (
-    <section className="w-full rounded-xl border border-zinc-300 overflow-hidden bg-white shadow-sm">
-      <div className="px-4 py-3 bg-zinc-100 border-b border-zinc-300">
-        <h2 className="text-sm font-semibold text-zinc-900">{title}</h2>
-      </div>
+    <section className="w-full">
+      <p className="m-0 mb-2 text-[0.78rem] font-bold uppercase tracking-[0.12em] text-chwe-green-dark">
+        {kicker}
+      </p>
+      <h3 className="m-0 mb-2 text-[1.35rem] font-bold leading-[1.2] tracking-[-0.02em] text-chwe-ink">
+        {name}
+      </h3>
+      <p className="m-0 mb-4 max-w-[46rem] text-[0.98rem] text-chwe-muted">
+        {`${intro} Use the interactive avatar below to begin the conversation.`}
+      </p>
 
-      {sessionToken ? (
-        <PubHealthAvatarSession
-          key={sessionToken}
-          sessionAccessToken={sessionToken}
-          onSessionEnded={handleSessionEnded}
-          title={title}
-          scenarioId={scenarioId}
-          onMessagesChange={handleMessagesChange}
-        />
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-4 bg-white items-stretch">
-          <div className="flex flex-col rounded-lg border border-zinc-300 overflow-hidden bg-zinc-900 min-w-0">
-            <div className="relative w-full aspect-video overflow-hidden bg-black">
-              <img
-                src={previewImage}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/35" />
-              <div className="relative z-10 flex h-full flex-col items-center justify-center gap-3 px-4">
-                {error && (
-                  <p className="text-sm text-red-300 text-center">{error}</p>
-                )}
+      <div className="overflow-hidden rounded-[4px] border border-chwe-line bg-white shadow-chwe">
+        <div className="flex items-center justify-between gap-4 px-[18px] py-3.5 bg-chwe-soft border-b border-chwe-line">
+          <p className="m-0 text-[0.95rem] font-bold text-chwe-ink">{title}</p>
+        </div>
+
+        {sessionToken ? (
+          <PubHealthAvatarSession
+            key={sessionToken}
+            sessionAccessToken={sessionToken}
+            onSessionEnded={handleSessionEnded}
+            title={title}
+            scenarioId={scenarioId}
+            onMessagesChange={handleMessagesChange}
+          />
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-stretch">
+            <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416]">
+              <div className="relative w-full aspect-video overflow-hidden bg-[#101416]">
+                <img
+                  src={previewImage}
+                  alt=""
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/35" />
+                <div className="relative z-10 flex h-full flex-col items-center justify-center gap-3 px-4">
+                  {error && (
+                    <p className="text-sm text-[#f4c7c4] text-center">
+                      {error}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
                 <Button
                   onClick={() => void handleStartChat()}
                   disabled={isStarting}
@@ -419,15 +441,15 @@ export function PubHealthAvatarSection({
                 </Button>
               </div>
             </div>
+            <TranscriptPanel
+              messages={savedMessages}
+              compact
+              title={title}
+              scenarioId={scenarioId}
+            />
           </div>
-          <TranscriptPanel
-            messages={savedMessages}
-            compact
-            title={title}
-            scenarioId={scenarioId}
-          />
-        </div>
-      )}
+        )}
+      </div>
     </section>
   );
 }
