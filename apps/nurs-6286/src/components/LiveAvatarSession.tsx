@@ -41,16 +41,22 @@ const LiveAvatarSessionComponent: React.FC<{
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("avatarBackgroundImage");
-      return saved || "/headshot.png";
+      return localStorage.getItem("avatarBackgroundImage");
     }
-    return "/headshot.png";
+    return null;
   });
+  const [avatarPreviewImage, setAvatarPreviewImage] = useState<string | null>(
+    null,
+  );
   const [avatarId, setAvatarId] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("avatarIdOverride") || "";
+      return (
+        localStorage.getItem("avatarIdOverride") ||
+        AVATAR_PRESETS[0]?.avatarId ||
+        ""
+      );
     }
-    return "";
+    return AVATAR_PRESETS[0]?.avatarId || "";
   });
   const [language, setLanguage] = useState(() => {
     if (typeof window !== "undefined") {
@@ -108,6 +114,39 @@ const LiveAvatarSessionComponent: React.FC<{
         preset.avatarId === avatarId && preset.contextId === contextId,
     );
   }, [avatarId, contextId]);
+
+  useEffect(() => {
+    if (!avatarId) {
+      setAvatarPreviewImage(null);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const loadAvatarPreview = async () => {
+      try {
+        const response = await fetch(
+          `/api/avatar-preview?avatarId=${encodeURIComponent(avatarId)}`,
+          { signal: controller.signal },
+        );
+
+        if (!response.ok) {
+          throw new Error("Unable to load avatar preview");
+        }
+
+        const data = await response.json();
+        setAvatarPreviewImage(data.previewUrl || null);
+      } catch (error) {
+        if ((error as Error).name !== "AbortError") {
+          setAvatarPreviewImage(null);
+        }
+      }
+    };
+
+    loadAvatarPreview();
+
+    return () => controller.abort();
+  }, [avatarId]);
 
   useEffect(() => {
     if (sessionState === SessionState.DISCONNECTED) {
@@ -460,11 +499,15 @@ const LiveAvatarSessionComponent: React.FC<{
               )}
             </>
           ) : (
-            backgroundImage && (
+            (backgroundImage || avatarPreviewImage) && (
               <img
-                src={backgroundImage}
-                alt="Background"
-                className="w-full h-full object-cover"
+                src={backgroundImage || avatarPreviewImage || ""}
+                alt={
+                  backgroundImage
+                    ? "Custom background"
+                    : `${selectedPreset?.name || "Avatar"} preview`
+                }
+                className="w-full h-full object-contain"
               />
             )
           )}
