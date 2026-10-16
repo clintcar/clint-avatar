@@ -113,26 +113,33 @@ export const AvatarConfig: React.FC<AvatarConfigProps> = ({
   };
 
   return (
-    <div className="relative flex flex-col gap-4 w-full py-4 max-h-full overflow-y-auto px-4">
-      <div className="text-xl font-semibold text-white mb-2">LiveAvatarAPI</div>
+    <div className="relative flex max-h-full w-full flex-col gap-5 overflow-y-auto px-5 py-5">
+      <div className="mb-1">
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#6b5a2f]">
+          Session controls
+        </p>
+        <p className="mt-1 text-xl font-black text-black">
+          Simulation settings
+        </p>
+      </div>
       <Field label="Background Image (shown when inactive)">
         <div className="flex flex-col gap-2">
           <input
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
-            className="w-full text-white text-sm bg-zinc-700 py-2 px-6 rounded-lg outline-none cursor-pointer file:mr-4 file:py-1 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-zinc-600 file:text-white hover:file:bg-zinc-500"
+            className="w-full cursor-pointer border border-zinc-400 bg-white px-4 py-2 text-sm text-zinc-700 outline-none file:mr-4 file:border-0 file:bg-black file:px-4 file:py-1 file:text-sm file:font-bold file:text-white hover:file:bg-zinc-800"
           />
           {backgroundImage && (
             <div className="relative">
               <img
                 src={backgroundImage}
                 alt="Background preview"
-                className="w-full h-32 object-cover rounded-lg"
+                className="h-32 w-full border border-zinc-300 object-cover"
               />
               <button
                 onClick={handleRemoveImage}
-                className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+                className="absolute right-2 top-2 bg-red-700 px-2 py-1 text-xs font-bold text-white hover:bg-red-800"
               >
                 Remove
               </button>

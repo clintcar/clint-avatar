@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --cu-black: #000000;
+  --cu-charcoal: #222222;
+  --cu-gold: #cfb87c;
+  --cu-gold-dark: #a98f4e;
+  --cu-light: #f5f4f0;
+  --cu-border: #d8d5cc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--cu-light);
+}
+
+body {
+  margin: 0;
+  background: var(--cu-light);
+  color: var(--cu-black);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: var(--cu-gold);
+  color: var(--cu-black);
+}

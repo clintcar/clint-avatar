@@ -6,8 +6,8 @@ interface FieldProps {
 
 export const Field = (props: FieldProps) => {
   return (
-    <div className="flex flex-col gap-1">
-      <label className="text-zinc-400 text-sm">{props.label}</label>
+    <div className="flex flex-col gap-1.5">
+      <label className="text-sm font-bold text-zinc-800">{props.label}</label>
       {props.children}
     </div>
   );

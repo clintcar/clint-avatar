@@ -4,9 +4,11 @@ import NavBar from "../src/components/NavBar";
 
 export const metadata: Metadata = {
   title: {
-    default: "Nursing - 6286 | Author: Clint Carlson",
-    template: `%s - Nursing - 6286`,
+    default: "NURS 6286 Clinical Communication Lab",
+    template: `%s | NURS 6286`,
   },
+  description:
+    "Interactive clinical communication practice for CU Anschutz nursing learners.",
 };
 
 export default function RootLayout({
@@ -16,12 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white flex flex-col min-h-screen text-black">
-        <main className="relative flex flex-col gap-2 w-full">
+      <body className="flex min-h-screen flex-col bg-[#f5f4f0] text-black">
+        <main className="relative flex w-full flex-1 flex-col">
           <NavBar />
-          <div className="flex flex-col items-center justify-center flex-1">
-            {children}
-          </div>
+          {children}
         </main>
       </body>
     </html>

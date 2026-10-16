@@ -40,10 +40,18 @@ export const MessageHistory: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-3 border border-[#d8d5cc] bg-white p-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
+      <div>
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#6b5a2f]">
+          Session record
+        </p>
+        <h3 className="mt-1 text-xl font-black text-black">
+          Conversation transcript
+        </h3>
+      </div>
       <div
         ref={containerRef}
-        className="w-full overflow-y-auto flex flex-col gap-2 px-2 py-2 max-h-[150px] bg-zinc-100 rounded-lg"
+        className="flex max-h-[180px] w-full flex-col gap-2 overflow-y-auto border border-zinc-200 bg-[#f5f4f0] px-3 py-3"
       >
         {messages.length === 0 ? (
           <p className="text-sm text-zinc-500 text-center py-4">
@@ -62,7 +70,7 @@ export const MessageHistory: React.FC = () => {
               <p className="text-xs text-zinc-500">
                 {message.sender === MessageSender.AVATAR ? "Avatar" : "You"}
               </p>
-              <p className="text-sm text-black bg-white px-3 py-2 rounded-lg">
+              <p className="bg-white px-3 py-2 text-sm text-black shadow-sm">
                 {message.message}
               </p>
             </div>

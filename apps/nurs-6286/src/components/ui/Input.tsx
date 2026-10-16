@@ -15,7 +15,7 @@ export const Input: React.FC<InputProps> = ({
 }) => {
   return (
     <input
-      className={`w-full text-white text-sm bg-zinc-700 py-2 px-6 rounded-lg outline-none ${className || ""}`}
+      className={`w-full border border-zinc-500 bg-white px-4 py-2.5 text-sm text-black outline-none transition-colors focus:border-[#CFB87C] focus:ring-2 focus:ring-[#CFB87C]/30 ${className || ""}`}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       {...props}

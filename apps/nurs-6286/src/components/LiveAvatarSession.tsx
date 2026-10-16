@@ -16,7 +16,6 @@ import {
 import { SessionState, ConnectionQuality } from "@heygen/liveavatar-web-sdk";
 import { useAvatarActions } from "../liveavatar/useAvatarActions";
 import { Button } from "./ui/Button";
-import { AvatarConfig } from "./AvatarConfig";
 import { MessageHistory } from "./MessageHistory";
 import { LoadingIcon, FullscreenIcon, MicIcon, MicOffIcon } from "./ui/Icons";
 import { Select } from "./ui/Select";
@@ -38,8 +37,7 @@ const LiveAvatarSessionComponent: React.FC<{
   }) => Promise<void> | void;
 }> = ({ mode, onSessionStopped, onRestartSession }) => {
   const [message, setMessage] = useState("");
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(() => {
+  const [backgroundImage] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("avatarBackgroundImage");
     }
@@ -58,13 +56,13 @@ const LiveAvatarSessionComponent: React.FC<{
     }
     return AVATAR_PRESETS[0]?.avatarId || "";
   });
-  const [language, setLanguage] = useState(() => {
+  const [language] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("avatarLanguage") || DEFAULT_LANGUAGE;
     }
     return DEFAULT_LANGUAGE;
   });
-  const [emotion, setEmotion] = useState<string>(() => {
+  const [emotion] = useState<string>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("avatarEmotion") || "friendly";
     }
@@ -76,10 +74,11 @@ const LiveAvatarSessionComponent: React.FC<{
     }
     return DEFAULT_CONTEXT_ID;
   });
-  const [timerDuration, setTimerDuration] = useState<number | null>(null);
+  const [timerDuration] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [isVoiceChatMode, setIsVoiceChatMode] = useState(true);
   const [isPresetLoading, setIsPresetLoading] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -172,6 +171,16 @@ const LiveAvatarSessionComponent: React.FC<{
     }
   }, [attachElement, isStreamReady, sessionState]);
 
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === containerRef.current);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
   // Timer effect
   useEffect(() => {
     if (
@@ -235,10 +244,10 @@ const LiveAvatarSessionComponent: React.FC<{
 
   const toggleFullscreen = useCallback(async () => {
     try {
-      if (!document.fullscreenElement) {
-        await containerRef.current?.requestFullscreen?.();
-      } else {
+      if (document.fullscreenElement === containerRef.current) {
         await document.exitFullscreen();
+      } else {
+        await containerRef.current?.requestFullscreen?.();
       }
     } catch (err) {
       console.error("Fullscreen toggle failed", err);
@@ -315,7 +324,7 @@ const LiveAvatarSessionComponent: React.FC<{
       stop();
     }
     await stopSession();
-    if (document.fullscreenElement) {
+    if (document.fullscreenElement === containerRef.current) {
       try {
         await document.exitFullscreen();
       } catch (err) {
@@ -371,27 +380,33 @@ const LiveAvatarSessionComponent: React.FC<{
   const shouldShowVideo = isConnected || isConnecting;
 
   return (
-    <div className="w-full flex flex-col gap-8 max-w-[1080px]">
-      <div className="flex flex-col rounded-xl bg-zinc-900 overflow-hidden">
+    <div className="flex w-full flex-col gap-8">
+      <div className="flex flex-col overflow-hidden border border-[#d8d5cc] bg-white shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
         {isInactive && (
-          <div className="flex flex-row items-center gap-4 p-4 border-b border-zinc-700">
-            <div className="flex flex-row items-center gap-4">
+          <div className="flex flex-col gap-5 border-b-4 border-[#CFB87C] bg-white p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6">
+            <div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-[#6b5a2f]">
+                Ready when you are
+              </p>
               {mode === "FULL" && (
                 <>
                   <Button
                     onClick={handleStartVoiceChat}
                     disabled={isPresetLoading}
                   >
-                    Start Voice Chat
+                    Begin voice session
                   </Button>
                   {/* <Button onClick={handleStartTextChat}>Start Text Chat</Button> */}
                 </>
               )}
               {mode === "CUSTOM" && (
-                <Button onClick={() => startSession()}>Start Session</Button>
+                <Button onClick={() => startSession()}>Begin session</Button>
               )}
             </div>
-            <div className="ml-auto w-full max-w-[320px]">
+            <div className="w-full sm:max-w-[360px]">
+              <label className="mb-2 block text-xs font-bold uppercase tracking-[0.15em] text-zinc-600">
+                Conversation character
+              </label>
               <Select
                 isSelected={(option) =>
                   option.avatarId === avatarId && option.contextId === contextId
@@ -407,18 +422,26 @@ const LiveAvatarSessionComponent: React.FC<{
           </div>
         )}
         {(isConnected || isConnecting) && (
-          <div className="flex flex-row justify-center items-center gap-4 p-4 border-b border-zinc-700">
+          <div className="flex flex-row items-center justify-between gap-4 border-b-4 border-[#CFB87C] bg-black p-4 text-white">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#CFB87C]">
+                Live simulation
+              </p>
+              <p className="text-sm text-zinc-300">
+                {selectedPreset?.name || "Clinical conversation"}
+              </p>
+            </div>
             <Button
               onClick={handleStopChat}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-red-700 text-white hover:bg-red-800"
             >
-              Stop Chat
+              End session
             </Button>
           </div>
         )}
         <div
           ref={containerRef}
-          className="relative w-full aspect-video overflow-hidden flex flex-col items-center justify-center bg-black"
+          className="relative flex aspect-video w-full flex-col items-center justify-center overflow-hidden bg-black fullscreen:h-screen fullscreen:w-screen fullscreen:aspect-auto"
         >
           {shouldShowVideo ? (
             <>
@@ -427,7 +450,7 @@ const LiveAvatarSessionComponent: React.FC<{
                 autoPlay
                 playsInline
                 muted={false}
-                className="w-full h-full object-contain bg-black"
+                className="h-full w-full bg-black object-contain"
               />
               {isConnecting && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
@@ -435,29 +458,20 @@ const LiveAvatarSessionComponent: React.FC<{
                 </div>
               )}
               {timeRemaining !== null && timeRemaining > 0 && isConnected && (
-                <div className="absolute bottom-16 left-3 bg-black bg-opacity-75 text-white rounded-lg px-3 py-2 text-sm">
+                <div className="absolute bottom-16 left-3 bg-black/75 px-3 py-2 text-sm text-white">
                   Time remaining: {Math.floor(timeRemaining / 60)}:
                   {(timeRemaining % 60).toString().padStart(2, "0")}
                 </div>
               )}
               {connectionQuality !== ConnectionQuality.UNKNOWN &&
                 isConnected && (
-                  <div className="absolute bottom-3 left-3 bg-black bg-opacity-75 text-white rounded-lg px-3 py-2 text-sm">
+                  <div className="absolute bottom-3 left-3 bg-black/75 px-3 py-2 text-sm text-white">
                     Connection Quality: {connectionQuality}
                   </div>
                 )}
               {isConnected && (
-                <button
-                  aria-label="Toggle Full Screen"
-                  onClick={toggleFullscreen}
-                  className="absolute bottom-4 right-4 bg-zinc-900 bg-opacity-75 text-white p-2 rounded-md hover:bg-opacity-90"
-                >
-                  <FullscreenIcon size={20} />
-                </button>
-              )}
-              {isConnected && (
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-3">
-                  <div className="bg-black bg-opacity-75 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+                  <div className="flex items-center gap-2 bg-black/75 px-4 py-2 text-sm font-medium text-white">
                     <div
                       className={`w-3 h-3 rounded-full ${
                         isAvatarTalking
@@ -471,7 +485,7 @@ const LiveAvatarSessionComponent: React.FC<{
                   </div>
                   {mode === "FULL" && isVoiceChatMode && isActive && (
                     <Button
-                      className="!p-2 relative"
+                      className="relative !p-2"
                       disabled={isLoading}
                       onClick={() => {
                         if (isMuted) {
@@ -482,7 +496,7 @@ const LiveAvatarSessionComponent: React.FC<{
                       }}
                     >
                       <div
-                        className={`absolute left-0 top-0 rounded-lg border-2 border-[#CFB87C] w-full h-full ${
+                        className={`absolute left-0 top-0 h-full w-full border-2 border-[#CFB87C] ${
                           isUserTalking ? "animate-ping" : ""
                         }`}
                       />
@@ -507,85 +521,34 @@ const LiveAvatarSessionComponent: React.FC<{
                     ? "Custom background"
                     : `${selectedPreset?.name || "Avatar"} preview`
                 }
-                className="w-full h-full object-contain"
+                className="h-full w-full object-contain"
               />
             )
           )}
+          <button
+            type="button"
+            aria-label={
+              isFullscreen
+                ? "Exit avatar full screen"
+                : "Display avatar full screen"
+            }
+            aria-pressed={isFullscreen}
+            title={isFullscreen ? "Exit full screen" : "Display full screen"}
+            onClick={toggleFullscreen}
+            className="absolute right-4 top-4 z-10 flex items-center gap-2 border border-[#CFB87C] bg-black/80 px-3 py-2 text-sm font-bold text-white shadow-md transition hover:bg-[#CFB87C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CFB87C]"
+          >
+            <FullscreenIcon size={20} />
+            <span>{isFullscreen ? "Exit full screen" : "Full screen"}</span>
+          </button>
         </div>
-        {isInactive && (
-          <div className="border-t border-zinc-700">
-            <div
-              className="w-full cursor-pointer select-none p-4 text-sm font-medium bg-zinc-800 text-white"
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-            >
-              {isSettingsOpen ? "▲ Settings" : "▼ Settings"}
-            </div>
-            {isSettingsOpen && (
-              <div className="p-4 bg-zinc-800">
-                <AvatarConfig
-                  avatarId={avatarId}
-                  onAvatarIdChange={(value) => {
-                    setAvatarId(value);
-                    if (typeof window !== "undefined") {
-                      if (value) {
-                        localStorage.setItem("avatarIdOverride", value);
-                      } else {
-                        localStorage.removeItem("avatarIdOverride");
-                      }
-                    }
-                  }}
-                  language={language}
-                  onLanguageChange={(value) => {
-                    setLanguage(value);
-                    if (typeof window !== "undefined") {
-                      localStorage.setItem("avatarLanguage", value);
-                    }
-                  }}
-                  emotion={emotion}
-                  onEmotionChange={(value) => {
-                    setEmotion(value);
-                    if (typeof window !== "undefined") {
-                      localStorage.setItem("avatarEmotion", value);
-                    }
-                  }}
-                  contextId={contextId}
-                  onContextIdChange={(value) => {
-                    setContextId(value);
-                    if (typeof window !== "undefined") {
-                      if (value) {
-                        localStorage.setItem("avatarContextId", value);
-                      } else {
-                        localStorage.removeItem("avatarContextId");
-                      }
-                    }
-                  }}
-                  onPresetSelect={handlePresetSelect}
-                  timerDuration={timerDuration}
-                  onTimerDurationChange={setTimerDuration}
-                  backgroundImage={backgroundImage}
-                  onBackgroundImageChange={(image) => {
-                    setBackgroundImage(image);
-                    if (typeof window !== "undefined") {
-                      if (image) {
-                        localStorage.setItem("avatarBackgroundImage", image);
-                      } else {
-                        localStorage.removeItem("avatarBackgroundImage");
-                      }
-                    }
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        )}
         {(isConnected || isConnecting) && (
-          <div className="flex flex-col gap-6 items-center justify-center p-8 border-t border-zinc-700 w-full">
+          <div className="flex w-full flex-col items-center justify-center gap-6 border-t-4 border-[#CFB87C] bg-white p-8">
             {mode === "FULL" && (
-              <div className="flex flex-row gap-2 items-center">
+              <div className="flex flex-row items-center gap-2">
                 <button
-                  className={`px-4 py-2 rounded-lg text-sm ${
+                  className={`px-4 py-2 text-sm font-bold ${
                     isVoiceChatMode
-                      ? "bg-zinc-300 text-black"
+                      ? "bg-[#CFB87C] text-black"
                       : "bg-zinc-700 text-white"
                   }`}
                   onClick={() => {
@@ -636,7 +599,7 @@ const LiveAvatarSessionComponent: React.FC<{
               </div>
             )} */}
             {mode === "CUSTOM" && (
-              <div className="flex flex-row gap-2 items-end w-full max-w-[600px]">
+              <div className="flex w-full max-w-[600px] flex-row items-end gap-2">
                 <input
                   type="text"
                   value={message}
@@ -646,7 +609,7 @@ const LiveAvatarSessionComponent: React.FC<{
                       handleSendMessage();
                     }
                   }}
-                  className="flex-1 bg-white text-black px-4 py-2 rounded-lg"
+                  className="flex-1 border border-zinc-500 bg-white px-4 py-2 text-black"
                   placeholder="Type a message..."
                 />
                 <Button className="!p-2" onClick={handleSendMessage}>
@@ -667,7 +630,7 @@ const LiveAvatarSessionComponent: React.FC<{
         )}
       </div>
       {isConnected && (
-        <div className="w-full flex flex-col">
+        <div className="flex w-full flex-col">
           <MessageHistory />
         </div>
       )}

@@ -4,36 +4,48 @@ import React from "react";
 
 export default function NavBar() {
   return (
-    <>
-      <div className="flex flex-col w-[1000px] m-auto px-6 pt-6 pb-2">
-        <div className="flex flex-row justify-center items-center">
-          <p className="text-4xl font-semibold text-black">Nursing - 6286</p>
-        </div>
-        <div className="flex flex-col items-end gap-1 mt-2">
-          <div className="flex flex-row justify-end items-center gap-4">
+    <header className="w-full text-white">
+      <div className="bg-black">
+        <div className="mx-auto flex min-h-11 w-full max-w-[1200px] items-center justify-between gap-4 px-5 py-2 sm:px-8">
+          <a
+            href="https://www.cuanschutz.edu/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 text-sm transition-opacity hover:opacity-80"
+          >
+            <span className="font-black tracking-tight text-[#CFB87C]">CU</span>
+            <span>
+              University of Colorado{" "}
+              <strong className="font-bold">Anschutz</strong>
+            </span>
+          </a>
+          <div className="hidden items-center gap-5 text-xs sm:flex">
+            <span>NURS 6286</span>
+            <span className="text-[#CFB87C]">•</span>
             <a
               href="https://www.linkedin.com/in/clintcarlson/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-black hover:text-zinc-600 text-sm font-medium transition-colors"
-            >
-              Director: Clint Carlson
-            </a>
-            <span className="text-black text-sm">|</span>
-            <a
-              href="https://www.linkedin.com/in/clintcarlson/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-black hover:text-zinc-600 text-sm font-medium transition-colors"
+              className="hover:text-[#CFB87C]"
             >
               Contact
             </a>
           </div>
-          <p className="text-black text-xs">
-            Last updated: {new Date().toLocaleString()}
-          </p>
         </div>
       </div>
-    </>
+
+      <div className="border-b border-black bg-[#222222]">
+        <div className="mx-auto flex min-h-20 w-full max-w-[1200px] items-center px-5 sm:px-8">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#CFB87C]">
+              CU Anschutz
+            </p>
+            <p className="text-2xl font-black tracking-tight sm:text-3xl">
+              College of Nursing
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
   );
 }

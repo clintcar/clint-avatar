@@ -7,6 +7,7 @@ export const LiveAvatarDemo = () => {
   const [sessionToken, setSessionToken] = useState("");
   const [mode, setMode] = useState<"FULL" | "CUSTOM">("FULL");
   const [error, setError] = useState<string | null>(null);
+  const [isStarting, setIsStarting] = useState(true);
 
   const handleStart = async (config?: {
     avatar_id?: string;
@@ -14,6 +15,7 @@ export const LiveAvatarDemo = () => {
     emotion?: string;
     context_id?: string;
   }): Promise<void> => {
+    setIsStarting(true);
     try {
       const res = await fetch("/api/start-session", {
         method: "POST",
@@ -33,21 +35,29 @@ export const LiveAvatarDemo = () => {
       setError(null);
     } catch (error: unknown) {
       setError((error as Error).message);
+    } finally {
+      setIsStarting(false);
     }
   };
 
   const handleStartCustom = async () => {
-    const res = await fetch("/api/start-custom-session", {
-      method: "POST",
-    });
-    if (!res.ok) {
-      const error = await res.json();
-      setError(error.error);
-      return;
+    setIsStarting(true);
+    try {
+      const res = await fetch("/api/start-custom-session", {
+        method: "POST",
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        setError(error.error);
+        return;
+      }
+      const { session_token } = await res.json();
+      setSessionToken(session_token);
+      setMode("CUSTOM");
+      setError(null);
+    } finally {
+      setIsStarting(false);
     }
-    const { session_token } = await res.json();
-    setSessionToken(session_token);
-    setMode("CUSTOM");
   };
 
   const onSessionStopped = () => {
@@ -97,36 +107,87 @@ export const LiveAvatarDemo = () => {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center gap-4">
-      {!sessionToken ? (
-        <>
-          {error && (
-            <div className="text-red-500">
-              {"Error getting session token: " + error}
-            </div>
-          )}
-          <button
-            onClick={() => handleStart()}
-            className="w-fit bg-white text-black px-4 py-2 rounded-md"
-          >
-            Start Full Avatar Session
-          </button>
+    <>
+      <section
+        id="simulation"
+        className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col px-5 py-8 sm:px-8 sm:py-10"
+      >
+        <div className="mb-7 flex flex-col gap-2 border-l-4 border-[#CFB87C] pl-5">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#6b5a2f]">
+            NURS 6286
+          </p>
+          <h2 className="text-3xl font-black tracking-tight text-black sm:text-4xl">
+            Choose a conversation
+          </h2>
+          <p className="max-w-3xl text-zinc-600">
+            Select a character from the menu and begin when you are ready.
+          </p>
+        </div>
 
-          <button
-            onClick={handleStartCustom}
-            className="w-fit bg-white text-black px-4 py-2 rounded-md"
+        {!sessionToken ? (
+          <div
+            aria-live="polite"
+            className="flex min-h-72 flex-col items-center justify-center gap-5 border border-[#d8d5cc] bg-white p-8 text-center shadow-[0_12px_30px_rgba(0,0,0,0.08)]"
           >
-            Start Custom Avatar Session
-          </button>
-        </>
-      ) : (
-        <LiveAvatarSession
-          mode={mode}
-          sessionAccessToken={sessionToken}
-          onSessionStopped={onSessionStopped}
-          onRestartSession={onRestartSession}
-        />
-      )}
-    </div>
+            {error ? (
+              <>
+                <p className="max-w-xl text-sm font-bold text-red-700">
+                  {"Unable to prepare the simulation: " + error}
+                </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <button
+                    onClick={() => handleStart()}
+                    disabled={isStarting}
+                    className="bg-[#CFB87C] px-6 py-3 text-sm font-bold text-black transition hover:bg-[#bda668] disabled:opacity-50"
+                  >
+                    Try again
+                  </button>
+                  <button
+                    onClick={handleStartCustom}
+                    disabled={isStarting}
+                    className="border-2 border-black px-6 py-3 text-sm font-bold text-black transition hover:bg-black hover:text-white disabled:opacity-50"
+                  >
+                    Start custom session
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-zinc-200 border-t-[#CFB87C]" />
+                <div>
+                  <p className="font-bold text-black">
+                    Preparing your simulation
+                  </p>
+                  <p className="mt-1 text-sm text-zinc-600">
+                    Connecting securely to the clinical conversation lab…
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        ) : (
+          <LiveAvatarSession
+            mode={mode}
+            sessionAccessToken={sessionToken}
+            onSessionStopped={onSessionStopped}
+            onRestartSession={onRestartSession}
+          />
+        )}
+      </section>
+
+      <footer className="border-t-4 border-[#CFB87C] bg-black text-zinc-300">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-2 px-5 py-6 text-xs sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <p>NURS 6286</p>
+          <a
+            href="https://xr.cuanschutz.edu/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-[#CFB87C]"
+          >
+            Learn more about Live AI Avatars @ CU-AMC
+          </a>
+        </div>
+      </footer>
+    </>
   );
 };
