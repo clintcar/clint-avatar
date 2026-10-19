@@ -221,6 +221,10 @@ const GREG_RUBRIC: RubricSection[] = [
   },
 ];
 
+export function findPatient(id: string): Patient | undefined {
+  return PATIENTS.find((patient) => patient.id === id);
+}
+
 export const PATIENTS: Patient[] = [
   {
     id: "jessica",

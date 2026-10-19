@@ -1,7 +1,13 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { PATIENTS, type Patient } from "../../app/lib/patients";
+import { useRouter } from "next/navigation";
+import {
+  findPatient,
+  PATIENTS,
+  type Patient,
+  type PatientId,
+} from "../../app/lib/patients";
 import {
   AvatarPreview,
   AvatarSession,
@@ -11,8 +17,17 @@ import { ClinicalDashboard } from "./ClinicalDashboard";
 import { TranscriptPanel } from "./TranscriptPanel";
 import type { LiveAvatarSessionMessage } from "../liveavatar/types";
 
-export function MentalHealthExperience() {
+export function MentalHealthExperience({
+  initialPatientId = "jessica",
+}: {
+  initialPatientId?: PatientId;
+}) {
+  const router = useRouter();
   const [patient, setPatient] = useState<Patient>(() => {
+    const selected = findPatient(initialPatientId);
+    if (selected) {
+      return selected;
+    }
     const first = PATIENTS[0];
     if (!first) {
       throw new Error("At least one patient is required.");
@@ -34,6 +49,7 @@ export function MentalHealthExperience() {
     setError(null);
     setMessages([]);
     setNotes("");
+    router.replace(`/${next.id}`);
   };
 
   const handleStart = useCallback(async () => {
