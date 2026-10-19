@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sdm-black: #111111;
+  --sdm-gold: #cfb87c;
+  --ink: #222222;
+  --muted: #555555;
+  --line: #dddddd;
+  --soft: #f4f4f4;
+  --content: 1200px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--soft);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.7rem 1rem;
+  background: #fff;
+  color: var(--ink);
+  z-index: 9999;
+  border: 2px solid var(--sdm-gold);
+}
+
+.sdm-shell {
+  width: min(calc(100% - 40px), var(--content));
+  margin: 0 auto;
+}
