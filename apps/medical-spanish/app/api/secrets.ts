@@ -1,4 +1,4 @@
-export const API_KEY = "2e23fcdc-cef5-11f0-a99e-066a7fa2e369";
+export const API_KEY = process.env.LIVEAVATAR_API_KEY ?? "";
 export const API_URL = "https://api.liveavatar.com";
 export const AVATAR_ID = "bf00036b-558a-44b5-b2ff-1e3cec0f4ceb";
 
@@ -12,5 +12,5 @@ export const VOICE_ID: string | undefined =
 
 // CUSTOM MODE Customizations
 export const ELEVENLABS_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // ElevenLabs voice for TTS
-export const ELEVENLABS_API_KEY = "YOUR_ELEVENLABS_API_KEY";
-export const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY";
+export const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY ?? "";
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY ?? "";
