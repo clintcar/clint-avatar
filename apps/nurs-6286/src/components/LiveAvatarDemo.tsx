@@ -173,6 +173,40 @@ export const LiveAvatarDemo = () => {
             onRestartSession={onRestartSession}
           />
         )}
+
+        <div className="mt-[30px] grid grid-cols-1 items-start gap-6 min-[651px]:grid-cols-2 min-[651px]:gap-12">
+          <section
+            aria-label="Project contact"
+            className="min-w-0 border-l-[3px] border-[#CFB87C] bg-[#f6f5f2] px-[22px] py-[18px] text-sm leading-relaxed text-[#595959]"
+          >
+            <p>
+              <a
+                href="mailto:christina.baker@cuanschutz.edu?subject=Live%20Avatars%20%40%20CU-AMC"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 hover:text-[#705a24] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#956c13]"
+              >
+                Contact Christina Baker, PhD, RN, NCSN, NI-BC to learn more
+                about this project.
+              </a>
+            </p>
+          </section>
+
+          <section
+            aria-label="CU-AMC Avatar"
+            className="min-w-0 border-r-[3px] border-[#CFB87C] bg-[#f6f5f2] px-[22px] py-[18px] text-right text-sm leading-relaxed text-[#595959]"
+          >
+            <p>Learn more about Live AI Avatars at CU Anschutz.</p>
+            <a
+              href="https://xr.cuanschutz.edu/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 hover:text-[#705a24] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#956c13]"
+            >
+              Meet Grace, our CU-AMC Avatar ↗
+            </a>
+          </section>
+        </div>
       </section>
 
       <footer className="border-t-4 border-[#CFB87C] bg-black text-zinc-300">
@@ -184,7 +218,7 @@ export const LiveAvatarDemo = () => {
             rel="noopener noreferrer"
             className="transition-colors hover:text-[#CFB87C]"
           >
-            Learn more about Live AI Avatars @ CU-AMC
+            xr.cuanschutz.edu ↗
           </a>
         </div>
       </footer>
