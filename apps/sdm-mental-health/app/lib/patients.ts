@@ -229,7 +229,8 @@ export const PATIENTS: Patient[] = [
   {
     id: "jessica",
     name: "Jessica",
-    summary: "Practice mental health screening with a patient.",
+    summary:
+      "Practice patient interviewing and mental health assessment using the PHQ-2 and PHQ-9.",
     avatarId: "073b60a9-89a8-45aa-8902-c358f64d2852",
     contextId: "570af2fa-b81c-4db4-abc9-b3b517740bba",
     previewImage:
