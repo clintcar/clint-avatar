@@ -80,6 +80,8 @@ const SessionInner: React.FC<{
     const boot = async () => {
       setHasStarted(true);
       await startSession();
+      // Give both PHQ patients a three-second quiet beat before voice chat begins.
+      await new Promise<void>((resolve) => setTimeout(resolve, 3000));
       await start();
     };
     void boot();
