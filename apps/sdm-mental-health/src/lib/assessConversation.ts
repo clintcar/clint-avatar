@@ -32,7 +32,6 @@ const followup = [/plan (?:to |for )?(?:hurt|harm|kill)/i, /intent(?:ion)? to (?
 
 export function assessConversation(patient: Patient, messages: LiveAvatarSessionMessage[], notes: string): Assessment {
   const learnerTurns = messages.filter(m => m.sender === MessageSender.USER).map(m => m.message);
-  const patientTurns = messages.filter(m => m.sender !== MessageSender.USER).map(m => m.message);
   // Assessment/debrief turns must not count as learner-administered screening.
   const cutoff = learnerTurns.findIndex(t => /(?:assess|evaluate|grade|score) (?:me|my performance)|(?:end|stop) (?:the )?(?:role.?play|simulation)/i.test(t));
   const clinicalTurns = cutoff < 0 ? learnerTurns : learnerTurns.slice(0, cutoff);
@@ -53,7 +52,7 @@ export function assessConversation(patient: Patient, messages: LiveAvatarSession
   const hasSIResponseNote = /suicid|self.harm|item 9|safety|ideation/i.test(documentation);
   const observations = PHQ_ITEMS.map((item, i) => ({
     label: item.label,
-    observed: flags[i],
+    observed: Boolean(flags[i]),
     evidence: clinicalTurns.find(t => item.patterns.some(p => p.test(t))) || "",
   }));
   let clinical: EvidenceScore;
