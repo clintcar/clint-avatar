@@ -9,18 +9,6 @@ import {
 import { downloadConversationReport } from "../lib/generateConversationReport";
 import { Button } from "./ui/Button";
 
-function formatMessagesForExport(
-  patientName: string,
-  messages: LiveAvatarSessionMessage[],
-) {
-  return messages.map((message) => {
-    const dateStr = new Date(message.timestamp).toLocaleString();
-    const sender =
-      message.sender === MessageSender.USER ? "Learner" : patientName;
-    return `[${dateStr}] ${sender}: ${message.message}`;
-  });
-}
-
 export function TranscriptPanel({
   patient,
   messages,
@@ -41,22 +29,6 @@ export function TranscriptPanel({
     }
     container.scrollTop = container.scrollHeight;
   }, [messages]);
-
-  const handleExportLog = () => {
-    if (messages.length === 0) {
-      return;
-    }
-    const content = formatMessagesForExport(patient.name, messages).join("\n");
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${patient.id}-conversation-transcript-${new Date().toISOString().split("T")[0]}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
 
   const handleReport = async () => {
     if (messages.length === 0 || isGenerating) {
@@ -87,13 +59,6 @@ export function TranscriptPanel({
           )}
         </div>
         <div className="flex max-w-[220px] shrink-0 flex-col gap-2">
-          <Button
-            onClick={handleExportLog}
-            disabled={messages.length === 0}
-            className="px-3 text-xs"
-          >
-            Export Log
-          </Button>
           <Button
             onClick={() => void handleReport()}
             disabled={messages.length === 0 || isGenerating}
