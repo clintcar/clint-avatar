@@ -1,4 +1,5 @@
 import type { Patient } from "../../app/lib/patients";
+import { assessConversation } from "./assessConversation";
 import {
   MessageSender,
   type LiveAvatarSessionMessage,
@@ -9,47 +10,6 @@ const INK = { r: 34, g: 34, b: 34 };
 const MUTED = { r: 85, g: 85, b: 85 };
 const PAGE_MARGIN = 48;
 const PAGE_BOTTOM = 36;
-
-type LookFor = {
-  label: string;
-  terms: string[];
-};
-
-const LOOK_FORS: Record<Patient["id"], LookFor[]> = {
-  jessica: [
-    {
-      label: "Administers the PHQ-2",
-      terms: ["phq", "interest", "pleasure", "down", "depressed", "hopeless"],
-    },
-    {
-      label:
-        "Explains why mental health screening belongs in this dental visit",
-      terms: ["screen", "why", "dental", "standard", "questionnaire", "mood"],
-    },
-    {
-      label: "Keeps the interview focused and responds to anxiety",
-      terms: ["understand", "worry", "sorry", "thank", "let's", "focus"],
-    },
-  ],
-  greg: [
-    {
-      label: "Administers the PHQ-2 and recognizes a need to continue",
-      terms: ["phq-2", "phq 2", "interest", "depressed", "hopeless"],
-    },
-    {
-      label: "Administers the PHQ-9",
-      terms: ["phq-9", "phq 9", "questionnaire"],
-    },
-    {
-      label: "Explores suicidal ideation after a positive screen",
-      terms: ["suicide", "suicidal", "hurt yourself", "harm", "safety"],
-    },
-    {
-      label: "Discusses behavioral health referral and follow-up",
-      terms: ["refer", "referral", "primary care", "follow"],
-    },
-  ],
-};
 
 function excerpt(text: string, max = 220) {
   const clean = text.replace(/\s+/g, " ").trim();
@@ -127,10 +87,14 @@ export async function downloadConversationReport({
 
   writeWrapped(patient.name, { style: "bold", size: 16, gap: 4 });
   writeWrapped(patient.summary, { size: 11, color: MUTED, gap: 12 });
-  writeWrapped(
-    "This report pairs the live transcript with the case rubric. Observed notes quote the conversation. A numeric case score is left for faculty review against the rubric.",
-    { size: 10, color: MUTED, gap: 14 },
-  );
+  const assessment = assessConversation(patient, messages, notes);
+  writeWrapped("Provisional automated score: " + assessment.total + "/" + assessment.max, { style: "bold", size: 14, gap: 6 });
+  writeWrapped(assessment.caveat, { size: 10, color: MUTED, gap: 14 });
+  writeWrapped("Rubric score breakdown", { style: "bold", size: 13, gap: 8 });
+  for (const section of assessment.sections) {
+    writeWrapped(section.title + ": " + section.score + "/" + section.max, { style: "bold", size: 11, gap: 3 });
+    writeWrapped(section.rationale, { size: 10, color: MUTED, gap: 8 });
+  }
 
   writeWrapped("Observed in this conversation", {
     style: "bold",
@@ -138,27 +102,9 @@ export async function downloadConversationReport({
     gap: 8,
   });
 
-  const learnerTurns = messages
-    .filter((message) => message.sender === MessageSender.USER)
-    .map((message) => message.message);
-  const learnerText = learnerTurns.join(" ").toLowerCase();
-
-  for (const lookFor of LOOK_FORS[patient.id]) {
-    const hit = lookFor.terms.some((term) => learnerText.includes(term));
-    const quote = learnerTurns.find((turn) =>
-      lookFor.terms.some((term) => turn.toLowerCase().includes(term)),
-    );
-    writeWrapped(`${hit ? "Seen" : "Not observed"} — ${lookFor.label}`, {
-      style: "bold",
-      size: 11,
-      gap: 3,
-    });
-    writeWrapped(
-      quote
-        ? `Learner: "${excerpt(quote)}"`
-        : "No learner turn in this transcript matched this look-for.",
-      { size: 10, color: MUTED, gap: 8 },
-    );
+  for (const item of assessment.observations) {
+    writeWrapped(`${item.observed ? "Observed" : "Not observed"} — ${item.label}`, { style: "bold", size: 11, gap: 3 });
+    writeWrapped(item.evidence ? `Learner: "${excerpt(item.evidence)}"` : "No matching learner question found before the debrief.", { size: 10, color: MUTED, gap: 8 });
   }
 
   writeWrapped("Case rubric", { style: "bold", size: 13, gap: 8 });
