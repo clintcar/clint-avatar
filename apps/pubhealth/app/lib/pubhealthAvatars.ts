@@ -19,7 +19,7 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
     avatarId: "a96238c3-21e9-4eca-b4ca-3e411e4e5b6d",
     contextId: "c6376529-37e9-46f2-8cff-9edca594f739",
     previewImage:
-      "https://files2.heygen.ai/avatar/v3/3d606d7659854541a0dd9ee3a81528ec_55380/preview_target.webp",
+      "/api/avatar-preview?avatar_id=a96238c3-21e9-4eca-b4ca-3e411e4e5b6d",
   },
   {
     id: "journalist-henry-hook",
@@ -30,7 +30,7 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
     avatarId: "a217d7cc-425e-42a1-9de7-c19c22c621ac",
     contextId: "f1398d19-adfc-4271-897f-645e61df4247",
     previewImage:
-      "https://files2.heygen.ai/avatar/v3/db2fb7fd0d044b908395a011166ab22d_45680/preview_target.webp",
+      "/api/avatar-preview?avatar_id=a217d7cc-425e-42a1-9de7-c19c22c621ac",
   },
   {
     id: "community-skeptical-joann-jackson",
@@ -41,7 +41,7 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
     avatarId: "5f3fbb4d-87d3-4d71-9c5e-7b3689be6939",
     contextId: "5a1499f2-afbe-4177-b1d9-7b16d97e142d",
     previewImage:
-      "https://files2.heygen.ai/avatar/v3/d3370d0f86784bde8e2144d16d573dcc_55280/preview_target.webp",
+      "/api/avatar-preview?avatar_id=5f3fbb4d-87d3-4d71-9c5e-7b3689be6939",
   },
   {
     id: "community-confrontational-michelle-smith",
@@ -52,6 +52,6 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
     avatarId: "29973c22-9f65-4701-b504-4399e00f60e9",
     contextId: "87694914-a546-4682-b5d5-c636ceefd2ef",
     previewImage:
-      "https://files2.heygen.ai/avatar/v3/d3370d0f86784bde8e2144d16d573dcc_55280/preview_target.webp",
+      "/api/avatar-preview?avatar_id=29973c22-9f65-4701-b504-4399e00f60e9",
   },
 ];
