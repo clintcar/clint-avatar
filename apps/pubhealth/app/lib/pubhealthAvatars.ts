@@ -16,7 +16,7 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
     name: "Jessica Newby",
     kicker: "Policymaker scenario",
     intro: "Practice a live conversation with Representative Jessica Newby.",
-    avatarId: "bf00036b-558a-44b5-b2ff-1e3cec0f4ceb",
+    avatarId: "a96238c3-21e9-4eca-b4ca-3e411e4e5b6d",
     contextId: "c6376529-37e9-46f2-8cff-9edca594f739",
     previewImage:
       "https://files2.heygen.ai/avatar/v3/3d606d7659854541a0dd9ee3a81528ec_55380/preview_target.webp",
@@ -27,7 +27,7 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
     name: "Henry Hook",
     kicker: "Journalist scenario",
     intro: "Practice a live conversation with journalist Henry Hook.",
-    avatarId: "7b888024-f8c9-4205-95e1-78ce01497bda",
+    avatarId: "a217d7cc-425e-42a1-9de7-c19c22c621ac",
     contextId: "f1398d19-adfc-4271-897f-645e61df4247",
     previewImage:
       "https://files2.heygen.ai/avatar/v3/db2fb7fd0d044b908395a011166ab22d_45680/preview_target.webp",
@@ -38,7 +38,7 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
     name: "Joann Jackson",
     kicker: "Community conversation",
     intro: "Practice a live conversation with community member Joann Jackson.",
-    avatarId: "3f291b22-0267-4fb6-a25b-847fb63604b0",
+    avatarId: "5f3fbb4d-87d3-4d71-9c5e-7b3689be6939",
     contextId: "5a1499f2-afbe-4177-b1d9-7b16d97e142d",
     previewImage:
       "https://files2.heygen.ai/avatar/v3/d3370d0f86784bde8e2144d16d573dcc_55280/preview_target.webp",
@@ -49,7 +49,7 @@ export const PUBHEALTH_AVATARS: PubHealthAvatarConfig[] = [
     name: "Michelle Smith",
     kicker: "Community town hall",
     intro: "Practice a live conversation with community member Michelle Smith.",
-    avatarId: "3f291b22-0267-4fb6-a25b-847fb63604b0",
+    avatarId: "29973c22-9f65-4701-b504-4399e00f60e9",
     contextId: "87694914-a546-4682-b5d5-c636ceefd2ef",
     previewImage:
       "https://files2.heygen.ai/avatar/v3/d3370d0f86784bde8e2144d16d573dcc_55280/preview_target.webp",
