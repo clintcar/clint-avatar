@@ -2,6 +2,7 @@ export interface AvatarPreset {
   name: string;
   avatarId: string;
   contextId: string;
+  voiceSpeed?: number;
 }
 
 export const AVATAR_PRESETS: AvatarPreset[] = [
@@ -9,11 +10,13 @@ export const AVATAR_PRESETS: AvatarPreset[] = [
     name: "Estrella Lopez",
     avatarId: "9c3c9582-da52-4406-a782-60f68c88744c",
     contextId: "d95f4b2c-b81b-4fe5-afd3-3d428e724ee6",
+    voiceSpeed: 0.5,
   },
   {
     name: "Ann Morris",
     avatarId: "f60e1df0-9a55-4578-bd3b-d8944c725780",
     contextId: "f54937d5-dcbf-4a2f-9c85-ddfd77d3f60c",
+    voiceSpeed: 0.5,
   },
   {
     name: "Jane Doe",
