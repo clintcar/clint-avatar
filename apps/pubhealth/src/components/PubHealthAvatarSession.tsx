@@ -15,6 +15,7 @@ import { LANGUAGE } from "../../app/api/secrets";
 import type { LiveAvatarSessionMessage } from "../liveavatar/types";
 
 type SessionConfig = {
+  scenarioId:string;
   avatarId: string;
   contextId: string;
 };
@@ -319,6 +320,7 @@ async function fetchSessionToken(config: SessionConfig) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      scenario_id:config.scenarioId,
       avatar_id: config.avatarId,
       context_id: config.contextId,
       language: LANGUAGE || "en",
@@ -359,7 +361,7 @@ export function PubHealthAvatarSection({
   const [savedMessages, setSavedMessages] = useState<
     LiveAvatarSessionMessage[]
   >([]);
-  const config = { avatarId, contextId };
+  const config = { scenarioId, avatarId, contextId };
 
   const handleStartChat = useCallback(async () => {
     setIsStarting(true);
@@ -373,7 +375,7 @@ export function PubHealthAvatarSection({
     } finally {
       setIsStarting(false);
     }
-  }, [avatarId, contextId]);
+  }, [scenarioId, avatarId, contextId]);
 
   const handleSessionEnded = useCallback(() => {
     setSessionToken("");
