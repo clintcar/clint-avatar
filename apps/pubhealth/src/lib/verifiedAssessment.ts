@@ -59,13 +59,11 @@ export async function generateVerifiedAssessment(onProgress:(index:number,total:
   if(!prepared)throw Error("The conversation transcript is still being saved.");
   ticket=prepared;
   const sdk=await import("@heygen/liveavatar-web-sdk");
-  session=new sdk.LiveAvatarSession(ticket.token,{autoKeepAlive:true,voiceChat:{defaultMuted:true}});
-  // The SDK may open a microphone even for a silent assessor. Do not.
-  const originalStart=session.voiceChat.start;
-  session.voiceChat.start=async()=>{};
+  // This app uses the original SDK SessionConfig, where voiceChat is a boolean.
+  // Text-only assessment avoids opening a microphone.
+  session=new sdk.LiveAvatarSession(ticket.token,{voiceChat:false,apiUrl:"https://api.liveavatar.com"});
   const started=session.start();
   await Promise.race([started,new Promise<never>((_,reject)=>setTimeout(()=>reject(Error("The assessor could not connect.")),45000))]);
-  session.voiceChat.start=originalStart;
   const receipts:string[]=[];
   for(let i=0;i<ticket.categoryIds.length;i++){
    if(signal.aborted)throw Error("Assessment cancelled.");
