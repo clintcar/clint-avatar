@@ -32,18 +32,17 @@ async function collect(session:LiveAvatarSession,ticket:SessionTicket,categoryId
  const {AgentEventsEnum,SessionEvent}=await import("@heygen/liveavatar-web-sdk");
  return new Promise<{item:VerifiedCategory;receipt:string}>((resolve,reject)=>{
   let finished=false,fragments="",polling=false;
-  const textEvent=AgentEventsEnum.AVATAR_TRANSCRIPTION,chunkEvent=AgentEventsEnum.AVATAR_TRANSCRIPTION_CHUNK;
+  const textEvent=AgentEventsEnum.AVATAR_TRANSCRIPTION;
   const timer=setTimeout(()=>fail("The assessor did not return category "+categoryId+" in time."),47000);
   const poll=setInterval(()=>{if(polling||finished)return;polling=true;void req({action:"read",ticket:ticket.ticket,categoryId},signal,18000).then(data=>{if(data.item&&data.receipt)done({item:data.item,receipt:data.receipt});}).catch(()=>{}).finally(()=>{polling=false;});},3500);
-  const cleanup=()=>{clearTimeout(timer);clearInterval(poll);signal.removeEventListener("abort",abort);session.off(textEvent,onText);session.off(chunkEvent,onChunk);session.off(SessionEvent.SESSION_DISCONNECTED,disconnect);};
+  const cleanup=()=>{clearTimeout(timer);clearInterval(poll);signal.removeEventListener("abort",abort);session.off(textEvent,onText);session.off(SessionEvent.SESSION_DISCONNECTED,disconnect);};
   const fail=(msg:string)=>{if(finished)return;finished=true;cleanup();reject(Error(msg));};
   const done=(value:{item:VerifiedCategory;receipt:string})=>{if(finished)return;finished=true;cleanup();resolve(value);};
   const verify=(text:string)=>{for(const obj of objects(text).reverse()){const item=matching(obj,ticket.assessmentId,categoryId);if(item){void req({action:"verify",ticket:ticket.ticket,categoryId,item},signal,18000).then(v=>done(v)).catch(e=>fail(e instanceof Error?e.message:"Evidence verification failed."));return;}}};
   const onText=(event:{text?:string})=>{if(typeof event.text==="string"){verify(event.text);verify(fragments+event.text);}};
-  const onChunk=(event:{text?:string})=>{if(typeof event.text==="string"){fragments+=event.text;verify(fragments);}};
   const disconnect=()=>fail("The LiveAvatar assessor disconnected.");
   const abort=()=>fail("Assessment cancelled.");
-  session.on(textEvent,onText);session.on(chunkEvent,onChunk);session.on(SessionEvent.SESSION_DISCONNECTED,disconnect);
+  session.on(textEvent,onText);session.on(SessionEvent.SESSION_DISCONNECTED,disconnect);
   signal.addEventListener("abort",abort,{once:true});if(signal.aborted){abort();return;}
   try{session.message(prompt);}catch{fail("Unable to request a rubric evaluation.");}
  });
