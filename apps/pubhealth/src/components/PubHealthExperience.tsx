@@ -57,15 +57,6 @@ export function PubHealthExperience() {
           ))}
         </div>
 
-        <div className="mt-10 bg-chwe-mist border-t-4 border-t-chwe-blue px-[22px] py-[18px] rounded-[4px]">
-          <h3 className="m-0 mb-2 text-[1.05rem] font-bold text-chwe-ink">
-            When you are finished
-          </h3>
-          <p className="m-0 text-[0.95rem] text-chwe-muted">
-            When you are finished with the entire interaction, close this
-            tab/window to return and to complete the post-experience survey.
-          </p>
-        </div>
       </div>
     </div>
   );
