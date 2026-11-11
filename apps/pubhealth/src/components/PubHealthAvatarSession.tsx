@@ -10,17 +10,21 @@ import {
 import { SessionState, ConnectionQuality } from "@heygen/liveavatar-web-sdk";
 import { Button } from "./ui/Button";
 import { ClinicalDashboard, TranscriptPanel } from "./ClinicalDashboard";
+import { ConversationPrompts } from "./ConversationPrompts";
+import { SpokenFeedbackVideo } from "./SpokenFeedbackVideo";
+import type { VerifiedReport } from "../lib/verifiedAssessment";
 import { LoadingIcon, FullscreenIcon, MicIcon, MicOffIcon } from "./ui/Icons";
 import { LANGUAGE } from "../../app/api/secrets";
 import type { LiveAvatarSessionMessage } from "../liveavatar/types";
 
 type SessionConfig = {
+  scenarioId: string;
   avatarId: string;
   contextId: string;
 };
 
 const PubHealthAvatarSessionInner: React.FC<{
-  onSessionEnded: () => void;
+  onSessionEnded: (review?: boolean) => void;
   title: string;
   scenarioId: string;
   onMessagesChange?: (messages: LiveAvatarSessionMessage[]) => void;
@@ -28,6 +32,7 @@ const PubHealthAvatarSessionInner: React.FC<{
   const [message, setMessage] = useState("");
   const [isVoiceChatMode, setIsVoiceChatMode] = useState(true);
   const [hasStarted, setHasStarted] = useState(false);
+  const reviewRequested = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -54,7 +59,7 @@ const PubHealthAvatarSessionInner: React.FC<{
 
   useEffect(() => {
     if (sessionState === SessionState.DISCONNECTED) {
-      onSessionEnded();
+      onSessionEnded(reviewRequested.current);
     }
   }, [sessionState, onSessionEnded]);
 
@@ -88,6 +93,7 @@ const PubHealthAvatarSessionInner: React.FC<{
   }, [hasStarted, sessionState, start, startSession]);
 
   const handleStopChat = useCallback(async () => {
+    reviewRequested.current = false;
     if (isActive) {
       stop();
     }
@@ -99,7 +105,7 @@ const PubHealthAvatarSessionInner: React.FC<{
         console.error("Failed to exit fullscreen:", err);
       }
     }
-    onSessionEnded();
+    onSessionEnded(false);
   }, [isActive, onSessionEnded, stop, stopSession]);
 
   const handleSendMessage = useCallback(() => {
@@ -127,7 +133,7 @@ const PubHealthAvatarSessionInner: React.FC<{
   }, []);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-stretch">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-start">
       <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416] shadow-chwe">
         <div
           ref={containerRef}
@@ -215,7 +221,7 @@ const PubHealthAvatarSessionInner: React.FC<{
               onClick={handleStopChat}
               className="bg-[#a33a32] hover:bg-[#862e28] focus:bg-[#862e28] text-white text-sm"
             >
-              Stop Chat
+              End Conversation
             </Button>
           )}
           {isConnected && (
@@ -278,6 +284,7 @@ const PubHealthAvatarSessionInner: React.FC<{
             </>
           )}
         </div>
+        <ConversationPrompts scenarioId={scenarioId} />
       </div>
       <ClinicalDashboard
         compact
@@ -291,7 +298,7 @@ const PubHealthAvatarSessionInner: React.FC<{
 
 export const PubHealthAvatarSession: React.FC<{
   sessionAccessToken: string;
-  onSessionEnded: () => void;
+  onSessionEnded: (review?: boolean) => void;
   title: string;
   scenarioId: string;
   onMessagesChange?: (messages: LiveAvatarSessionMessage[]) => void;
@@ -319,6 +326,7 @@ async function fetchSessionToken(config: SessionConfig) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      scenario_id: config.scenarioId,
       avatar_id: config.avatarId,
       context_id: config.contextId,
       language: LANGUAGE || "en",
@@ -354,17 +362,25 @@ export function PubHealthAvatarSection({
   previewImage: string;
 }) {
   const [sessionToken, setSessionToken] = useState("");
+  const [reviewTrigger, setReviewTrigger] = useState(0);
+  const [spokenReport, setSpokenReport] = useState<VerifiedReport | null>(null);
+  const [spokenRequested, setSpokenRequested] = useState(false);
+  const reviewRequested = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [isStarting, setIsStarting] = useState(false);
   const [savedMessages, setSavedMessages] = useState<
     LiveAvatarSessionMessage[]
   >([]);
-  const config = { avatarId, contextId };
+  const config = { scenarioId, avatarId, contextId };
 
   const handleStartChat = useCallback(async () => {
     setIsStarting(true);
     setError(null);
     setSavedMessages([]);
+    setReviewTrigger(0);
+    setSpokenReport(null);
+    setSpokenRequested(false);
+    reviewRequested.current = false;
     try {
       const token = await fetchSessionToken(config);
       setSessionToken(token);
@@ -373,10 +389,16 @@ export function PubHealthAvatarSection({
     } finally {
       setIsStarting(false);
     }
-  }, [avatarId, contextId]);
+  }, [scenarioId, avatarId, contextId]);
 
-  const handleSessionEnded = useCallback(() => {
+  const handleSessionEnded = useCallback((review = false) => {
+    // Ending a conversation never requests analysis automatically.
+    void review;
     setSessionToken("");
+  }, []);
+
+  const handleReportReady = useCallback((report: VerifiedReport) => {
+    setSpokenReport(report);
   }, []);
 
   const handleMessagesChange = useCallback(
@@ -415,37 +437,50 @@ export function PubHealthAvatarSection({
             onMessagesChange={handleMessagesChange}
           />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-stretch">
-            <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416]">
-              <div className="relative w-full aspect-video overflow-hidden bg-[#101416]">
-                <img
-                  src={previewImage}
-                  alt=""
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/35" />
-                <div className="relative z-10 flex h-full flex-col items-center justify-center gap-3 px-4">
-                  {error && (
-                    <p className="text-sm text-[#f4c7c4] text-center">
-                      {error}
-                    </p>
-                  )}
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-start">
+            {spokenRequested && spokenReport ? (
+              <SpokenFeedbackVideo
+                report={spokenReport}
+                onFinish={() => setSpokenRequested(false)}
+              />
+            ) : (
+              <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416]">
+                <div className="relative w-full aspect-video overflow-hidden bg-[#101416]">
+                  <img
+                    src={previewImage}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/35" />
+                  <div className="relative z-10 flex h-full flex-col items-center justify-center gap-3 px-4">
+                    {error && (
+                      <p className="text-sm text-[#f4c7c4] text-center">
+                        {error}
+                      </p>
+                    )}
+                  </div>
                 </div>
+                <div className="flex flex-col items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
+                  <Button
+                    onClick={() => void handleStartChat()}
+                    disabled={isStarting}
+                  >
+                    {isStarting ? "Starting..." : "Start Conversation"}
+                  </Button>
+                </div>
+                <ConversationPrompts scenarioId={scenarioId} />
               </div>
-              <div className="flex flex-col items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
-                <Button
-                  onClick={() => void handleStartChat()}
-                  disabled={isStarting}
-                >
-                  {isStarting ? "Starting..." : "Start Chat"}
-                </Button>
-              </div>
-            </div>
+            )}
             <TranscriptPanel
               messages={savedMessages}
               compact
               title={title}
               scenarioId={scenarioId}
+              reviewTrigger={reviewTrigger}
+              onReportReady={handleReportReady}
+              onSpokenRequested={() => {
+                if (spokenReport) setSpokenRequested(true);
+              }}
             />
           </div>
         )}

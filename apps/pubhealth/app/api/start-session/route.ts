@@ -1,3 +1,6 @@
+import { cookies } from "next/headers";
+import { createHmac } from "node:crypto";
+import { PUBHEALTH_AVATARS } from "../../lib/pubhealthAvatars";
 import { API_KEY, API_URL, AVATAR_ID, CONTEXT_ID, LANGUAGE } from "../secrets";
 
 export async function POST(request: Request) {
@@ -5,10 +8,23 @@ export async function POST(request: Request) {
   let session_id = "";
   try {
     const body = await request.json().catch(() => ({}));
-    const avatarId = body.avatar_id || AVATAR_ID;
+    const scenario = PUBHEALTH_AVATARS.find(
+      (entry) => entry.id === body.scenario_id,
+    );
+    if (
+      !scenario ||
+      body.avatar_id !== scenario.avatarId ||
+      body.context_id !== scenario.contextId
+    ) {
+      return new Response(
+        JSON.stringify({ error: "Choose a valid Public Health scenario." }),
+        { status: 400 },
+      );
+    }
+    const avatarId = scenario.avatarId;
     const language = body.language || LANGUAGE;
     const emotion = body.emotion;
-    const contextId = body.context_id || CONTEXT_ID;
+    const contextId = scenario.contextId;
 
     const avatarPersona: {
       context_id: string;
@@ -38,7 +54,10 @@ export async function POST(request: Request) {
     if (!res.ok) {
       const resp = await res.json();
       const errorMessage =
-        resp.data[0].message ?? "Failed to retrieve session token";
+        resp?.data?.[0]?.message ??
+        resp?.message ??
+        resp?.error?.message ??
+        `Failed to retrieve session token (HTTP ${res.status})`;
       return new Response(JSON.stringify({ error: errorMessage }), {
         status: res.status,
       });
@@ -47,6 +66,24 @@ export async function POST(request: Request) {
 
     session_token = data.data.session_token;
     session_id = data.data.session_id;
+    const secret = process.env.SESSION_SIGNING_SECRET || API_KEY;
+    const payload = Buffer.from(
+      JSON.stringify({
+        sessionId: session_id,
+        scenarioId: scenario.id,
+        expires: Date.now() + 3 * 60 * 60 * 1000,
+      }),
+    ).toString("base64url");
+    const signature = createHmac("sha256", secret)
+      .update(payload)
+      .digest("base64url");
+    (await cookies()).set("ph_review_session", payload + "." + signature, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 10800,
+    });
   } catch (error) {
     console.error("Error retrieving session token:", error);
     return new Response(JSON.stringify({ error: (error as Error).message }), {

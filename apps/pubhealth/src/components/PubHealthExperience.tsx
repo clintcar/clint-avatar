@@ -56,8 +56,6 @@ export function PubHealthExperience() {
             />
           ))}
         </div>
-
-
       </div>
     </div>
   );
