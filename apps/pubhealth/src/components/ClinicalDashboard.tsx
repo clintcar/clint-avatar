@@ -270,7 +270,7 @@ export function TranscriptPanel({
             {error}
           </p>
         )}
-        <div className="max-h-[440px] overflow-y-auto divide-y divide-chwe-line">
+        <div className="divide-y divide-chwe-line">
           {spec?.categories.map((category, i) => {
             const finding =
               report?.categories.find((c) => c.id === category.id)?.result ??

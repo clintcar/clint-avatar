@@ -147,24 +147,6 @@ a:focus {
 }
 @media (max-width: 1099px) {
   .pubhealth-qr-rail {
-    position: fixed;
-    right: 14px;
-    bottom: 14px;
-    z-index: 30;
-  }
-  .share-experience-qr {
-    width: 136px;
-    padding: 8px;
-    gap: 4px;
-  }
-  .share-experience-qr-image {
-    width: 116px;
-    height: 116px;
-  }
-  .share-experience-qr-label {
-    font-size: 12px;
-  }
-  .share-experience-qr-caption {
     display: none;
   }
 }
