@@ -711,3 +711,21 @@ summary:focus-visible {
     padding: 20px;
   }
 }
+
+.presentation-workspace.theater {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 100dvh;
+  overflow: auto;
+  border-radius: 0;
+}
+.presentation-workspace:fullscreen .avatar-video,
+.presentation-workspace.theater .avatar-video {
+  max-height: max(220px, calc(100dvh - 300px));
+}
+.presentation-workspace:fullscreen.without-transcript .avatar-stage,
+.presentation-workspace.theater.without-transcript .avatar-stage {
+  max-width: min(1120px, max(390px, calc((100dvh - 300px) * 1.7778)));
+}

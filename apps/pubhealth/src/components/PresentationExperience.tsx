@@ -13,23 +13,38 @@ export function PresentationExperience({
   const [showTranscript, setShowTranscript] = useState(false);
   const [showBriefing, setShowBriefing] = useState(true);
   const [fullscreen, setFullscreen] = useState(false);
-  const [screenError, setScreenError] = useState("");
+  const [theater, setTheater] = useState(false);
   const workspace = useRef<HTMLDivElement>(null);
   const avatar = scenario.avatar;
   useEffect(() => {
     const sync = () => setFullscreen(!!document.fullscreenElement);
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setTheater(false);
+    };
     document.addEventListener("fullscreenchange", sync);
-    return () => document.removeEventListener("fullscreenchange", sync);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("fullscreenchange", sync);
+      document.removeEventListener("keydown", escape);
+    };
   }, []);
   async function toggleFullscreen() {
+    if (theater) {
+      setTheater(false);
+      return;
+    }
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+      return;
+    }
+    setShowBriefing(false);
     try {
-      if (document.fullscreenElement) await document.exitFullscreen();
-      else await workspace.current?.requestFullscreen();
-      setFullscreen(!!document.fullscreenElement);
+      if (!workspace.current?.requestFullscreen)
+        throw Error("Fullscreen API unavailable");
+      await workspace.current.requestFullscreen();
     } catch {
-      setScreenError(
-        "Full screen is unavailable in this browser. Use your browser’s full-screen command.",
-      );
+      // Embedded browsers may deny native fullscreen; keep a usable presentation view.
+      setTheater(true);
     }
   }
   return (
@@ -46,7 +61,7 @@ export function PresentationExperience({
       </div>
       <div
         ref={workspace}
-        className={`presentation-workspace ${showTranscript ? "with-transcript" : "without-transcript"}`}
+        className={`presentation-workspace ${theater ? "theater" : ""} ${showTranscript ? "with-transcript" : "without-transcript"}`}
       >
         <div className="presentation-heading">
           <div>
@@ -75,11 +90,10 @@ export function PresentationExperience({
               className="present-button"
               onClick={() => void toggleFullscreen()}
             >
-              {fullscreen ? "Exit full screen" : "Full screen"}
+              {fullscreen || theater ? "Exit full screen" : "Full screen"}
             </button>
           </div>
         </div>
-        {screenError && <p role="status">{screenError}</p>}
         {showBriefing && (
           <div className="presentation-briefing">
             <div>
