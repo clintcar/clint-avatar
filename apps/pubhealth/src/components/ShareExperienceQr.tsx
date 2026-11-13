@@ -6,6 +6,7 @@ const PUBLIC_URL = "https://clint-avatar-pubhealth.vercel.app/";
 
 export function ShareExperienceQr() {
   const [expanded, setExpanded] = useState(false);
+  const [avatarFullscreen, setAvatarFullscreen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
 
@@ -13,11 +14,28 @@ export function ShareExperienceQr() {
     if (expanded) dialog.current?.showModal();
   }, [expanded]);
 
+  useEffect(() => {
+    const syncFullscreen = () => {
+      const active = Boolean(document.fullscreenElement);
+      setAvatarFullscreen(active);
+      if (active) {
+        dialog.current?.close();
+        setExpanded(false);
+      }
+    };
+    syncFullscreen();
+    document.addEventListener("fullscreenchange", syncFullscreen);
+    return () =>
+      document.removeEventListener("fullscreenchange", syncFullscreen);
+  }, []);
+
   function close() {
     dialog.current?.close();
     setExpanded(false);
     trigger.current?.focus();
   }
+
+  if (avatarFullscreen) return null;
 
   return (
     <>
@@ -27,19 +45,19 @@ export function ShareExperienceQr() {
         onClick={() => setExpanded(true)}
         aria-label="Enlarge QR code to explore the avatars"
         aria-haspopup="dialog"
-        className="mb-8 flex w-[190px] flex-col items-center gap-1 rounded-[4px] border border-chwe-line bg-white px-3 py-3 text-center hover:bg-chwe-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chwe-blue min-[1100px]:absolute min-[1100px]:right-0 min-[1100px]:top-0 min-[1100px]:mb-0"
+        className="share-experience-qr flex w-[340px] flex-col items-center gap-2 rounded-[4px] border border-chwe-line bg-white px-4 py-4 text-center shadow-chwe hover:bg-chwe-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-chwe-blue"
       >
         <img
           src="/research-exchange-qr.svg"
-          width="160"
-          height="160"
+          width="300"
+          height="300"
           alt="QR code for the Live Avatar Conversations public page"
-          className="h-[160px] w-[160px]"
+          className="share-experience-qr-image h-[300px] w-[300px]"
         />
-        <strong className="text-sm text-chwe-blue-dark">
+        <strong className="share-experience-qr-label text-lg text-chwe-blue-dark">
           Explore the avatars
         </strong>
-        <span className="text-xs text-chwe-muted">
+        <span className="share-experience-qr-caption text-sm text-chwe-muted">
           Scan to open · Click to enlarge
         </span>
       </button>
