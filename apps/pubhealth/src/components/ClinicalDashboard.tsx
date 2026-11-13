@@ -56,7 +56,7 @@ export function TranscriptPanel({
   });
   const [elapsed, setElapsed] = useState(0);
   const [, setErrorVersion] = useState(0);
-  const attempt = useRef(createReviewAttempt());
+  const attempt = useRef({ ...createReviewAttempt(), scenarioId });
   const [error, setError] = useState("");
   const abort = useRef<AbortController | null>(null);
 

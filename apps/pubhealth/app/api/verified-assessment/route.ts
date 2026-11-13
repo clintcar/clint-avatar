@@ -264,18 +264,28 @@ function saved(t: Ticket, values: unknown, turns: Turn[]): Item[] {
     throw Error("Duplicate verified category.");
   return results;
 }
-async function authorized() {
-  const raw = (await cookies()).get("ph_review_session")?.value;
+async function authorized(scenarioId: unknown) {
+  if (
+    typeof scenarioId !== "string" ||
+    !PUBHEALTH_AVATARS.some((a) => a.id === scenarioId)
+  )
+    throw Error("Choose a valid Public Health scenario for this assessment.");
+  const jar = await cookies();
+  const raw =
+    jar.get(`ph_review_session_${scenarioId}`)?.value ??
+    jar.get("ph_review_session")?.value;
   const v = unseal<{ sessionId: string; scenarioId: string; expires: number }>(
     raw,
   );
+  if (v.scenarioId !== scenarioId)
+    throw Error("This assessment does not match the selected scenario.");
   if (v.expires < Date.now())
     throw Error("Your conversation review has expired.");
   return v;
 }
 async function decode(ticket: unknown) {
   const t = unseal<Ticket>(ticket),
-    current = await authorized();
+    current = await authorized(t.scenarioId);
   if (
     t.expires < Date.now() ||
     t.sessionId !== current.sessionId ||
@@ -299,7 +309,11 @@ export async function POST(req: NextRequest) {
   try {
     sameOrigin(req);
     const body = await req.json();
-    const current = await authorized();
+    const current = await authorized(
+      body.action === "prepare"
+        ? body.scenarioId
+        : unseal<Ticket>(body.ticket).scenarioId,
+    );
     const spec = getContextAssessment(current.scenarioId);
     if (!spec) throw Error("No matching Public Health rubric is available.");
     if (body.action === "prepare") {
