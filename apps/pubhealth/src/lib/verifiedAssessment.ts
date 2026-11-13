@@ -42,6 +42,7 @@ export type ReviewProgress = {
   total: number;
 };
 export type ReviewAttempt = {
+  scenarioId?: string;
   ticket?: string;
   assessmentId?: string;
   transcript?: VerifiedReport["transcript"];
@@ -311,6 +312,7 @@ export async function generateVerifiedAssessment(
         prepared = (await request(
           {
             action: "prepare",
+            scenarioId: attempt.scenarioId,
             previousTicket: attempt.ticket,
             receipts: Object.values(attempt.verified).map((x) => x.receipt),
           },

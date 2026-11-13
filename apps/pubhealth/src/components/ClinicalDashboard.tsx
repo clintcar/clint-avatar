@@ -34,6 +34,8 @@ export function TranscriptPanel({
   reviewTrigger = 0,
   onReportReady,
   onSpokenRequested,
+  presentation = false,
+  onReviewStateChange,
 }: {
   messages: LiveAvatarSessionMessage[];
   compact?: boolean;
@@ -43,6 +45,10 @@ export function TranscriptPanel({
   reviewTrigger?: number;
   onReportReady?: (report: VerifiedReport) => void;
   onSpokenRequested?: () => void;
+  presentation?: boolean;
+  onReviewStateChange?: (
+    state: "idle" | "generating" | "ready" | "incomplete",
+  ) => void;
 }) {
   const spec = getContextAssessment(scenarioId);
   const [report, setReport] = useState<VerifiedReport | null>(null);
@@ -56,11 +62,33 @@ export function TranscriptPanel({
   });
   const [elapsed, setElapsed] = useState(0);
   const [, setErrorVersion] = useState(0);
-  const attempt = useRef(createReviewAttempt());
+  const attempt = useRef({ ...createReviewAttempt(), scenarioId });
   const [error, setError] = useState("");
   const abort = useRef<AbortController | null>(null);
 
+  useEffect(() => {
+    if (!presentation) return;
+    const original = document.title;
+    if (busy) document.title = `Generating · ${original}`;
+    else if (report)
+      document.title = `${report.complete ? "Ready" : "Incomplete"} · ${original}`;
+    return () => {
+      document.title = original;
+    };
+  }, [busy, report, presentation]);
+
   const listRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    onReviewStateChange?.(
+      busy
+        ? "generating"
+        : report
+          ? report.complete
+            ? "ready"
+            : "incomplete"
+          : "idle",
+    );
+  }, [busy, report, onReviewStateChange]);
 
   useEffect(() => {
     if (listRef.current)
@@ -132,7 +160,7 @@ export function TranscriptPanel({
 
   return (
     <aside
-      className={`w-full min-w-0 rounded-[4px] border border-chwe-line bg-white flex flex-col ${compact ? "min-h-[470px]" : "min-h-[500px]"}`}
+      className={`conversation-panel w-full min-w-0 rounded-[4px] border border-chwe-line bg-white flex flex-col ${compact ? "min-h-[470px]" : "min-h-[500px]"}`}
     >
       <header className="px-4 py-3 border-b border-chwe-line bg-chwe-soft">
         <div className="flex items-center justify-between gap-2">
@@ -150,7 +178,7 @@ export function TranscriptPanel({
       </header>
       <section
         aria-label="Conversation transcript"
-        className="border-b border-chwe-line"
+        className="transcript-section border-b border-chwe-line"
       >
         <div className="flex items-center justify-between gap-3 px-4 py-2">
           <h4 className="text-xs font-bold uppercase tracking-wide text-chwe-blue">
@@ -166,7 +194,7 @@ export function TranscriptPanel({
         </div>
         <div
           ref={listRef}
-          className="h-[170px] overflow-y-auto bg-chwe-soft px-3 py-2 space-y-2"
+          className="transcript-messages h-[170px] overflow-y-auto bg-chwe-soft px-3 py-2 space-y-2"
           aria-live="polite"
         >
           {messages.length === 0 ? (
@@ -190,7 +218,7 @@ export function TranscriptPanel({
       </section>
       <section
         aria-label="Scenario assessment rubric"
-        className="flex-1 min-h-0"
+        className="rubric-section flex-1 min-h-0"
       >
         <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-chwe-line">
           <h4 className="text-xs font-bold uppercase tracking-wide text-chwe-blue">
@@ -265,12 +293,25 @@ export function TranscriptPanel({
             </div>
           </div>
         )}
+        {presentation && busy && (
+          <p className="assessment-tab-note" role="status">
+            Generating feedback. Keep this tab open; you can switch to another
+            avatar while it runs.
+          </p>
+        )}
+        {presentation && report && (
+          <p className="assessment-tab-note" role="status">
+            {report.complete
+              ? "Assessment ready. Review the feedback below or download the PDF."
+              : "Assessment incomplete. You can retry unfinished categories."}
+          </p>
+        )}
         {error && (
           <p className="px-4 py-2 text-xs text-[#a33a32]" role="alert">
             {error}
           </p>
         )}
-        <div className="max-h-[440px] overflow-y-auto divide-y divide-chwe-line">
+        <div className="rubric-items max-h-[440px] overflow-y-auto divide-y divide-chwe-line">
           {spec?.categories.map((category, i) => {
             const finding =
               report?.categories.find((c) => c.id === category.id)?.result ??
@@ -333,7 +374,7 @@ export function TranscriptPanel({
           })}
         </div>
       </section>
-      <footer className="px-4 py-3 flex flex-wrap gap-2 border-t border-chwe-line bg-chwe-soft">
+      <footer className="assessment-actions px-4 py-3 flex flex-wrap gap-2 border-t border-chwe-line bg-chwe-soft">
         {!live &&
           messages.length > 0 &&
           !busy &&

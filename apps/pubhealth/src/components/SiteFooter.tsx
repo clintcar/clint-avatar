@@ -44,7 +44,7 @@ export default function SiteFooter() {
               xr.cuanschutz.edu ↗
             </a>
             <span className="text-[10px] text-[#aaaaaa]">
-              Last updated: Nov 11, 2026, 3:58 PM MT
+              Last updated: Nov 13, 2026 · Research Exchange preview
             </span>
           </div>
         </div>

@@ -31,6 +31,7 @@ const PubHealthAvatarSessionInner: React.FC<{
 }> = ({ onSessionEnded, title, scenarioId, onMessagesChange }) => {
   const [message, setMessage] = useState("");
   const [isVoiceChatMode, setIsVoiceChatMode] = useState(true);
+  const [startError, setStartError] = useState("");
   const [hasStarted, setHasStarted] = useState(false);
   const reviewRequested = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -85,8 +86,16 @@ const PubHealthAvatarSessionInner: React.FC<{
 
     const boot = async () => {
       setHasStarted(true);
-      await startSession();
-      await start();
+      try {
+        await startSession();
+        await start();
+      } catch (error) {
+        setStartError(
+          error instanceof Error
+            ? error.message
+            : "Could not connect. End the conversation and try again.",
+        );
+      }
     };
 
     void boot();
@@ -94,9 +103,7 @@ const PubHealthAvatarSessionInner: React.FC<{
 
   const handleStopChat = useCallback(async () => {
     reviewRequested.current = false;
-    if (isActive) {
-      stop();
-    }
+    if (isActive) await stop();
     await stopSession();
     if (document.fullscreenElement) {
       try {
@@ -133,12 +140,12 @@ const PubHealthAvatarSessionInner: React.FC<{
   }, []);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-start">
-      <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416] shadow-chwe">
-        <div
-          ref={containerRef}
-          className="relative w-full aspect-video overflow-hidden flex items-center justify-center bg-[#101416]"
-        >
+    <div
+      ref={containerRef}
+      className="session-layout grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-start"
+    >
+      <div className="avatar-stage flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416] shadow-chwe">
+        <div className="avatar-video relative w-full aspect-video overflow-hidden flex items-center justify-center bg-[#101416]">
           {shouldShowVideo ? (
             <>
               <video
@@ -182,6 +189,9 @@ const PubHealthAvatarSessionInner: React.FC<{
                   </div>
                   {isVoiceChatMode && isActive && (
                     <Button
+                      aria-label={
+                        isMuted ? "Unmute microphone" : "Mute microphone"
+                      }
                       className="!p-2 relative"
                       disabled={isLoading}
                       onClick={() => {
@@ -215,8 +225,24 @@ const PubHealthAvatarSessionInner: React.FC<{
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-3 items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
-          {(isConnected || isConnecting) && (
+        <div className="session-controls flex flex-col gap-3 items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
+          {startError && (
+            <p role="alert" className="text-[#a33a32]">
+              {startError}
+            </p>
+          )}
+          {isConnected && isVoiceChatMode && isActive && (
+            <Button
+              onClick={() => (isMuted ? unmute() : mute())}
+              disabled={isLoading}
+            >
+              {isMuted ? "Unmute microphone" : "Mute microphone"}
+            </Button>
+          )}
+          {(isConnected || isConnecting || startError) && (
+            <Button onClick={toggleFullscreen}>Full screen / Exit</Button>
+          )}
+          {(isConnected || isConnecting || startError) && (
             <Button
               onClick={handleStopChat}
               className="bg-[#a33a32] hover:bg-[#862e28] focus:bg-[#862e28] text-white text-sm"
@@ -351,6 +377,7 @@ export function PubHealthAvatarSection({
   avatarId,
   contextId,
   previewImage,
+  presentation = false,
 }: {
   scenarioId: string;
   title: string;
@@ -360,8 +387,15 @@ export function PubHealthAvatarSection({
   avatarId: string;
   contextId: string;
   previewImage: string;
+  presentation?: boolean;
 }) {
   const [sessionToken, setSessionToken] = useState("");
+  const [reviewState, setReviewState] = useState<
+    "idle" | "generating" | "ready" | "incomplete"
+  >("idle");
+  const [round, setRound] = useState(0);
+  const [resetRequested, setResetRequested] = useState(false);
+  const [hasEnded, setHasEnded] = useState(false);
   const [reviewTrigger, setReviewTrigger] = useState(0);
   const [spokenReport, setSpokenReport] = useState<VerifiedReport | null>(null);
   const [spokenRequested, setSpokenRequested] = useState(false);
@@ -371,18 +405,24 @@ export function PubHealthAvatarSection({
   const [savedMessages, setSavedMessages] = useState<
     LiveAvatarSessionMessage[]
   >([]);
-  const config = { scenarioId, avatarId, contextId };
 
   const handleStartChat = useCallback(async () => {
     setIsStarting(true);
     setError(null);
+    setHasEnded(false);
+    setReviewState("idle");
+    setRound((value) => value + 1);
     setSavedMessages([]);
     setReviewTrigger(0);
     setSpokenReport(null);
     setSpokenRequested(false);
     reviewRequested.current = false;
     try {
-      const token = await fetchSessionToken(config);
+      const token = await fetchSessionToken({
+        scenarioId,
+        avatarId,
+        contextId,
+      });
       setSessionToken(token);
     } catch (err) {
       setError((err as Error).message);
@@ -395,6 +435,7 @@ export function PubHealthAvatarSection({
     // Ending a conversation never requests analysis automatically.
     void review;
     setSessionToken("");
+    setHasEnded(true);
   }, []);
 
   const handleReportReady = useCallback((report: VerifiedReport) => {
@@ -411,7 +452,10 @@ export function PubHealthAvatarSection({
   );
 
   return (
-    <section className="w-full">
+    <section
+      className={`avatar-section w-full ${presentation ? "presenting" : ""}`}
+      data-review-state={reviewState}
+    >
       <p className="m-0 mb-2 text-[0.78rem] font-bold uppercase tracking-[0.12em] text-chwe-green-dark">
         {kicker}
       </p>
@@ -423,7 +467,7 @@ export function PubHealthAvatarSection({
       </p>
 
       <div className="overflow-hidden rounded-[4px] border border-chwe-line bg-white shadow-chwe">
-        <div className="flex items-center justify-between gap-4 px-[18px] py-3.5 bg-chwe-soft border-b border-chwe-line">
+        <div className="scenario-title-bar flex items-center justify-between gap-4 px-[18px] py-3.5 bg-chwe-soft border-b border-chwe-line">
           <p className="m-0 text-[0.95rem] font-bold text-chwe-ink">{title}</p>
         </div>
 
@@ -437,15 +481,15 @@ export function PubHealthAvatarSection({
             onMessagesChange={handleMessagesChange}
           />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-start">
+          <div className="session-layout grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-start">
             {spokenRequested && spokenReport ? (
               <SpokenFeedbackVideo
                 report={spokenReport}
                 onFinish={() => setSpokenRequested(false)}
               />
             ) : (
-              <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416]">
-                <div className="relative w-full aspect-video overflow-hidden bg-[#101416]">
+              <div className="avatar-stage flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416]">
+                <div className="avatar-video relative w-full aspect-video overflow-hidden bg-[#101416]">
                   <img
                     src={previewImage}
                     alt=""
@@ -460,18 +504,64 @@ export function PubHealthAvatarSection({
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
-                  <Button
-                    onClick={() => void handleStartChat()}
-                    disabled={isStarting}
-                  >
-                    {isStarting ? "Starting..." : "Start Conversation"}
-                  </Button>
+                <div className="session-controls flex flex-col items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
+                  {presentation && hasEnded ? (
+                    <div className="ended-controls">
+                      <strong>
+                        {reviewState === "generating"
+                          ? "Generating feedback…"
+                          : reviewState === "ready"
+                            ? "Assessment ready"
+                            : "Conversation ended"}
+                      </strong>
+                      <span>
+                        {reviewState === "generating"
+                          ? "Keep this tab open. You can move to another avatar."
+                          : "Your transcript remains available for review."}
+                      </span>
+                      <Button
+                        disabled={reviewState === "generating"}
+                        onClick={() => setResetRequested(true)}
+                      >
+                        New conversation
+                      </Button>
+                      {resetRequested && (
+                        <div role="alert" className="reset-confirm">
+                          <p>
+                            Start a new conversation? This clears this tab’s
+                            transcript and feedback. Download anything you want
+                            to keep first.
+                          </p>
+                          <Button
+                            onClick={() => {
+                              setResetRequested(false);
+                              void handleStartChat();
+                            }}
+                          >
+                            Clear &amp; start
+                          </Button>
+                          <Button onClick={() => setResetRequested(false)}>
+                            Keep this conversation
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={() => void handleStartChat()}
+                      disabled={isStarting}
+                    >
+                      {isStarting ? "Starting..." : "Start Conversation"}
+                    </Button>
+                  )}
                 </div>
                 <ConversationPrompts scenarioId={scenarioId} />
               </div>
             )}
             <TranscriptPanel
+              key={round}
+              presentation={presentation}
+              onReviewStateChange={setReviewState}
               messages={savedMessages}
               compact
               title={title}

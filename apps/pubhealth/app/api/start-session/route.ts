@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { createHmac } from "node:crypto";
 import { PUBHEALTH_AVATARS } from "../../lib/pubhealthAvatars";
-import { API_KEY, API_URL, AVATAR_ID, CONTEXT_ID, LANGUAGE } from "../secrets";
+import { API_KEY, API_URL, LANGUAGE } from "../secrets";
 
 export async function POST(request: Request) {
   let session_token = "";
@@ -77,13 +77,17 @@ export async function POST(request: Request) {
     const signature = createHmac("sha256", secret)
       .update(payload)
       .digest("base64url");
-    (await cookies()).set("ph_review_session", payload + "." + signature, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: 10800,
-    });
+    (await cookies()).set(
+      `ph_review_session_${scenario.id}`,
+      payload + "." + signature,
+      {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: 10800,
+      },
+    );
   } catch (error) {
     console.error("Error retrieving session token:", error);
     return new Response(JSON.stringify({ error: (error as Error).message }), {
