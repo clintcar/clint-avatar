@@ -50,7 +50,16 @@ export async function GET(request: Request) {
       Number(raw) < 0
     ) {
       console.error("LiveAvatar returned an invalid credit balance");
-      return reply({ error: "Invalid balance response" }, 502);
+      return reply({
+        error: "Invalid balance response",
+        schema: {
+          code: typeof payload?.code === "number" ? payload.code : null,
+          top_keys: payload && typeof payload === "object" ? Object.keys(payload) : [],
+          data_keys: payload?.data && typeof payload.data === "object" ? Object.keys(payload.data) : [],
+          balance_type: typeof raw,
+          numeric_balance: typeof raw === "number" && Number.isFinite(raw) ? raw : null,
+        },
+      }, 502);
     }
     return reply({
       provider: "LiveAvatar",
