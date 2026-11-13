@@ -1,3 +1,4 @@
+import Script from "next/script";
 import "./globals.css";
 import type { Metadata } from "next";
 
@@ -16,5 +17,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </div></header>
     <main id="main" className="flex-1">{children}</main>
     <footer className="bg-white border-t border-sdm-line"><div className="sdm-shell py-5 text-[13px] text-[#777]">University of Colorado Anschutz Medical Campus · School of Dental Medicine</div></footer>
-  </body></html>;
+
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-XH3R6KN28W" strategy="afterInteractive" />
+        <Script id="xr-google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-XH3R6KN28W', { project_id: 'sdm_microteach' });`}
+        </Script>
+</body></html>;
 }

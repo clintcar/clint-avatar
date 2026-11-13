@@ -1,3 +1,4 @@
+import Script from "next/script";
 import "./globals.css";
 import { Metadata } from "next";
 
@@ -40,7 +41,15 @@ export default function RootLayout({
             Medicine
           </div>
         </footer>
-      </body>
+
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-XH3R6KN28W" strategy="afterInteractive" />
+        <Script id="xr-google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-XH3R6KN28W', { project_id: 'sdm_mental_health' });`}
+        </Script>
+</body>
     </html>
   );
 }
