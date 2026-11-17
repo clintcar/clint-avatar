@@ -172,11 +172,12 @@ function parseItem(
     )
       throw Error("A rubric explanation was missing.");
   }
-  if (![1,2,3].includes(Number(v.score))) throw Error("Invalid AME score.");
+  if (typeof v.score !== "number" || ![1, 2, 3].includes(v.score)) throw Error("Invalid AME score.");
+  if (v.status === "insufficient_evidence" && v.score !== 1) throw Error("Uncertain criterion cannot score above 1.");
   if (v.status === "observed" && Number(v.score) === 1) throw Error("Observed criterion cannot score 1.");
   if (v.status === "not_observed" && Number(v.score) !== 1) throw Error("Unobserved criterion must score 1.");
   if (!Array.isArray(v.evidence) || v.evidence.length > 5)
-    throw Error("Invalid learner evidence.");
+    throw Error("Invalid educator evidence.");
   const citations = v.evidence.map((ev: unknown) => {
     if (!ev || typeof ev !== "object") throw Error("Invalid evidence item.");
     const e = ev as { turnId?: unknown; quote?: unknown };
@@ -185,7 +186,7 @@ function parseItem(
       typeof e.quote !== "string" ||
       !e.quote.trim()
     )
-      throw Error("Missing evidence quotation or learner turn ID.");
+      throw Error("Missing evidence quotation or educator turn ID.");
     const turn = turns.find((t) => t.id === e.turnId);
     const quote = turn ? authenticQuote(turn, e.quote) : null;
     if (!quote)
@@ -196,11 +197,11 @@ function parseItem(
       );
     return { turnId: e.turnId, quote, role: turn!.role };
   });
-  if (v.status === "observed" && (!citations.length || !citations.some((c)=>c.role === "user")))
-    throw Error("Observed behavior requires a verified learner quotation.");
+  if (v.status === "observed" && (!citations.length || citations.some((c) => c.role !== "user")))
+    throw Error("Observed behavior requires a verified educator quotation.");
   if (v.status !== "observed" && citations.length)
     throw Error(
-      "Unobserved or uncertain results cannot cite positive learner evidence.",
+      "Unobserved or uncertain results cannot cite positive educator evidence.",
     );
   return {
     assessmentId,
