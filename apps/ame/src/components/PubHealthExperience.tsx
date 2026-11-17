@@ -13,11 +13,10 @@ export function PubHealthExperience() {
             Interactive learning experience
           </p>
           <h1 className="m-0 mb-3.5 text-[clamp(2rem,4vw,3.15rem)] font-bold leading-[1.12] tracking-[-0.03em]">
-            Live Avatar Conversations
+            AME Feedback Practice
           </h1>
           <p className="m-0 max-w-[46rem] text-[1.08rem] leading-[1.55] text-white/90">
-            Practice conversations with policymakers, journalists, and community
-            members.
+            Practice giving formative feedback to medical learners in four challenging scenarios.
           </p>
         </div>
       </section>
@@ -26,10 +25,10 @@ export function PubHealthExperience() {
         <div className="min-w-0">
           <div>
             <p className="m-0 mb-2.5 text-[0.78rem] font-bold uppercase tracking-[0.12em] text-chwe-green-dark">
-              Four live conversations
+              Four feedback scenarios
             </p>
             <h2 className="m-0 mb-3.5 text-[1.7rem] font-bold leading-[1.2] tracking-[-0.02em] text-chwe-ink">
-              Choose a scenario and begin
+              Choose a learner and begin
             </h2>
             <p className="m-0 mb-4 max-w-[46rem] text-[1.02rem] text-chwe-muted">
               Use the interactive avatar in each scenario to begin the
