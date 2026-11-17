@@ -1,0 +1,25 @@
+name: AME Preflight (no deployment)
+on:
+  push:
+    branches:
+      - feature/ame-feedback-simulations
+  workflow_dispatch:
+jobs:
+  validate-ame:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.0.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Validate AME rubric and configuration
+        run: node apps/ame/scripts/preflight.mjs
+      - name: Type-check AME
+        run: pnpm --filter ame typecheck
+      - name: Build AME
+        run: pnpm --filter ame build
