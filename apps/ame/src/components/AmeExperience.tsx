@@ -17,7 +17,8 @@ export function AmeExperience() {
         <p className="text-[#444]">
           Explore four clinical teaching scenarios and practice providing
           feedback with an interactive AI avatar. Review the learner’s
-          background, then select <strong>Start Conversation</strong> to begin.
+          background and scenario, then select{" "}
+          <strong>Start Conversation</strong> to begin.
         </p>
       </section>
 
@@ -29,11 +30,29 @@ export function AmeExperience() {
             title={avatar.title}
             name={avatar.name}
             kicker={avatar.kicker}
-            intro={avatar.intro}
             avatarId={avatar.avatarId}
             contextId={avatar.contextId}
             previewImage={avatar.previewImage}
-          />
+          >
+            <div className="mx-6 mt-5 space-y-3 max-[680px]:mx-4">
+              <dl className="flex flex-wrap gap-2.5 text-sm">
+                <div className="border-l-[3px] border-ame-gold bg-ame-mist px-3 py-2">
+                  <dt className="inline font-bold">Age:</dt>{" "}
+                  <dd className="inline">{avatar.age}</dd>
+                </div>
+                <div className="border-l-[3px] border-ame-gold bg-ame-mist px-3 py-2">
+                  <dt className="inline font-bold">Background:</dt>{" "}
+                  <dd className="inline">{avatar.background}</dd>
+                </div>
+              </dl>
+              <p>
+                <strong>Core Issue:</strong> {avatar.coreIssue}
+              </p>
+              <p>
+                <strong>Scenario:</strong> {avatar.scenario}
+              </p>
+            </div>
+          </AMEAvatarSection>
         ))}
       </div>
     </div>

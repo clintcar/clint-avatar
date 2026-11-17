@@ -347,7 +347,7 @@ export function AMEAvatarSection({
   title,
   name,
   kicker,
-  intro,
+  children,
   avatarId,
   contextId,
   previewImage,
@@ -356,7 +356,7 @@ export function AMEAvatarSection({
   title: string;
   name: string;
   kicker: string;
-  intro: string;
+  children: React.ReactNode;
   avatarId: string;
   contextId: string;
   previewImage: string;
@@ -424,9 +424,7 @@ export function AMEAvatarSection({
         </h3>
         <p className="text-sm text-ame-muted">{kicker}</p>
       </header>
-      <p className="mx-6 mt-5 border-l-[3px] border-ame-gold bg-ame-mist px-3 py-2 text-sm max-[680px]:mx-4">
-        {intro}
-      </p>
+      {children}
 
       <div>
         {sessionToken ? (
