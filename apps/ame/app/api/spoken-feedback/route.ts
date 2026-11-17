@@ -31,7 +31,7 @@ async function live(path: string, method = "GET", body?: unknown) {
 }
 function origin(req: NextRequest) {
   if (req.headers.get("origin") !== req.nextUrl.origin)
-    throw Error("Open this session from the Public Health website.");
+    throw Error("Open this session from the AME feedback practice website.");
 }
 export async function POST(req: NextRequest) {
   let contextId = "";
