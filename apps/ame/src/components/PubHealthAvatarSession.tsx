@@ -134,10 +134,10 @@ const AMEAvatarSessionInner: React.FC<{
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(260px,0.85fr)] gap-4 p-[18px] bg-white items-start">
-      <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416] shadow-chwe">
+      <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-ame-line bg-ame-black shadow-ame">
         <div
           ref={containerRef}
-          className="relative w-full aspect-video overflow-hidden flex items-center justify-center bg-[#101416]"
+          className="relative w-full aspect-video overflow-hidden flex items-center justify-center bg-ame-black"
         >
           {shouldShowVideo ? (
             <>
@@ -193,7 +193,7 @@ const AMEAvatarSessionInner: React.FC<{
                       }}
                     >
                       <div
-                        className={`absolute inset-0 rounded-[3px] border-2 border-chwe-green ${
+                        className={`absolute inset-0 rounded-[3px] border-2 border-ame-gold ${
                           isUserTalking ? "animate-ping" : ""
                         }`}
                       />
@@ -215,7 +215,7 @@ const AMEAvatarSessionInner: React.FC<{
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-3 items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
+        <div className="flex flex-col gap-3 items-center px-4 py-3.5 bg-ame-panel border-t border-ame-line">
           {(isConnected || isConnecting) && (
             <Button
               onClick={handleStopChat}
@@ -231,8 +231,8 @@ const AMEAvatarSessionInner: React.FC<{
                   type="button"
                   className={`px-3 py-1.5 rounded-[3px] text-xs font-bold ${
                     isVoiceChatMode
-                      ? "bg-chwe-blue text-white"
-                      : "bg-white text-chwe-ink border border-chwe-line"
+                      ? "bg-ame-charcoal text-white"
+                      : "bg-white text-ame-ink border border-ame-line"
                   }`}
                   onClick={() => {
                     setIsVoiceChatMode(true);
@@ -248,8 +248,8 @@ const AMEAvatarSessionInner: React.FC<{
                   type="button"
                   className={`px-3 py-1.5 rounded-[3px] text-xs font-bold ${
                     !isVoiceChatMode
-                      ? "bg-chwe-blue text-white"
-                      : "bg-white text-chwe-ink border border-chwe-line"
+                      ? "bg-ame-charcoal text-white"
+                      : "bg-white text-ame-ink border border-ame-line"
                   }`}
                   onClick={() => {
                     setIsVoiceChatMode(false);
@@ -273,7 +273,7 @@ const AMEAvatarSessionInner: React.FC<{
                         handleSendMessage();
                       }
                     }}
-                    className="flex-1 bg-white text-chwe-ink px-3 py-2 rounded-[3px] text-sm border border-chwe-line"
+                    className="flex-1 bg-white text-ame-ink px-3 py-2 rounded-[3px] text-sm border border-ame-line"
                     placeholder="Type a message..."
                   />
                   <Button className="!p-2 text-sm" onClick={handleSendMessage}>
@@ -411,22 +411,24 @@ export function AMEAvatarSection({
   );
 
   return (
-    <section className="w-full">
-      <p className="m-0 mb-2 text-[0.78rem] font-bold uppercase tracking-[0.12em] text-chwe-green-dark">
-        {kicker}
-      </p>
-      <h3 className="m-0 mb-2 text-[1.35rem] font-bold leading-[1.2] tracking-[-0.02em] text-chwe-ink">
-        {name}
-      </h3>
-      <p className="m-0 mb-4 max-w-[46rem] text-[0.98rem] text-chwe-muted">
-        {`${intro} Use the interactive avatar below to begin the conversation.`}
+    <section
+      aria-labelledby={`${scenarioId}-heading`}
+      className="w-full border border-ame-line bg-white shadow-ame"
+    >
+      <header className="border-b border-ame-line bg-ame-panel px-6 py-5 max-[680px]:p-4">
+        <h3
+          id={`${scenarioId}-heading`}
+          className="mb-1 text-[21px] font-bold leading-tight"
+        >
+          {name}
+        </h3>
+        <p className="text-sm text-ame-muted">{kicker}</p>
+      </header>
+      <p className="mx-6 mt-5 border-l-[3px] border-ame-gold bg-ame-mist px-3 py-2 text-sm max-[680px]:mx-4">
+        {intro}
       </p>
 
-      <div className="overflow-hidden rounded-[4px] border border-chwe-line bg-white shadow-chwe">
-        <div className="flex items-center justify-between gap-4 px-[18px] py-3.5 bg-chwe-soft border-b border-chwe-line">
-          <p className="m-0 text-[0.95rem] font-bold text-chwe-ink">{title}</p>
-        </div>
-
+      <div>
         {sessionToken ? (
           <AMEAvatarSession
             key={sessionToken}
@@ -444,8 +446,8 @@ export function AMEAvatarSection({
                 onFinish={() => setSpokenRequested(false)}
               />
             ) : (
-              <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-chwe-line bg-[#101416]">
-                <div className="relative w-full aspect-video overflow-hidden bg-[#101416]">
+              <div className="flex flex-col min-w-0 overflow-hidden rounded-[4px] border border-ame-line bg-ame-black">
+                <div className="relative w-full aspect-video overflow-hidden bg-ame-black">
                   <img
                     src={previewImage}
                     alt=""
@@ -460,7 +462,7 @@ export function AMEAvatarSection({
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col items-center px-4 py-3.5 bg-[#eef1f2] border-t border-chwe-line">
+                <div className="flex flex-col items-center px-4 py-3.5 bg-ame-panel border-t border-ame-line">
                   <Button
                     onClick={() => void handleStartChat()}
                     disabled={isStarting}

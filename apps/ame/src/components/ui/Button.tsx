@@ -5,7 +5,7 @@ export const Button: React.FC<
 > = ({ children, className, onClick, ...props }) => {
   return (
     <button
-      className={`inline-flex items-center justify-center min-h-[42px] px-[17px] py-2.5 rounded-[3px] bg-chwe-blue text-white text-[0.92rem] font-bold disabled:opacity-50 h-fit hover:bg-chwe-blue-dark focus:bg-chwe-blue-dark ${className || ""}`}
+      className={`inline-flex items-center justify-center min-h-[42px] px-[17px] py-2.5 rounded-[3px] bg-ame-charcoal text-white text-[0.92rem] font-bold disabled:opacity-50 h-fit hover:bg-ame-black focus:bg-ame-black ${className || ""}`}
       onClick={props.disabled ? undefined : onClick}
       {...props}
     >

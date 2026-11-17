@@ -142,8 +142,8 @@ export function SpokenFeedbackVideo({
     };
   }, [report]);
   return (
-    <div className="flex flex-col min-w-0 rounded-[4px] border border-chwe-line bg-[#101416] overflow-hidden">
-      <div className="relative aspect-video bg-[#101416]">
+    <div className="flex flex-col min-w-0 rounded-[4px] border border-ame-line bg-ame-black overflow-hidden">
+      <div className="relative aspect-video bg-ame-black">
         <video
           ref={video}
           autoPlay
@@ -156,19 +156,19 @@ export function SpokenFeedbackVideo({
             }
           }}
         />
-        <div className="absolute top-3 left-3 bg-chwe-blue/95 text-white text-xs px-3 py-1.5 rounded">
+        <div className="absolute top-3 left-3 bg-ame-charcoal/95 text-white text-xs px-3 py-1.5 rounded">
           Out of roleplay · Assessment mode
         </div>
       </div>
-      <div className="px-4 py-3 bg-[#eef1f2] border-t border-chwe-line space-y-2">
-        <p className="text-sm font-bold text-chwe-ink">{state}</p>
+      <div className="px-4 py-3 bg-ame-panel border-t border-ame-line space-y-2">
+        <p className="text-sm font-bold text-ame-ink">{state}</p>
         {audioError && (
           <p className="text-xs text-[#a33a32]" role="alert">
             {audioError}
           </p>
         )}
         {caption && (
-          <p className="text-xs text-chwe-muted max-h-20 overflow-y-auto">
+          <p className="text-xs text-ame-muted max-h-20 overflow-y-auto">
             {caption}
           </p>
         )}

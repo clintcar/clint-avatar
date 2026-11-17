@@ -132,28 +132,28 @@ export function TranscriptPanel({
 
   return (
     <aside
-      className={`w-full min-w-0 rounded-[4px] border border-chwe-line bg-white flex flex-col ${compact ? "min-h-[470px]" : "min-h-[500px]"}`}
+      className={`w-full min-w-0 rounded-[4px] border border-ame-line bg-white flex flex-col ${compact ? "min-h-[470px]" : "min-h-[500px]"}`}
     >
-      <header className="px-4 py-3 border-b border-chwe-line bg-chwe-soft">
+      <header className="px-4 py-3 border-b border-ame-line bg-ame-soft">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-sm font-bold text-chwe-ink">
+          <h3 className="text-sm font-bold text-ame-ink">
             Conversation &amp; assessment
           </h3>
-          <span className="text-[11px] text-chwe-muted">
+          <span className="text-[11px] text-ame-muted">
             {spec?.categories.length ?? 0} AME criteria · 1–3 points
           </span>
         </div>
-        <p className="text-xs text-chwe-muted mt-1">
+        <p className="text-xs text-ame-muted mt-1">
           The transcript and the scenario rubric remain available throughout the
           practice.
         </p>
       </header>
       <section
         aria-label="Conversation transcript"
-        className="border-b border-chwe-line"
+        className="border-b border-ame-line"
       >
         <div className="flex items-center justify-between gap-3 px-4 py-2">
-          <h4 className="text-xs font-bold uppercase tracking-wide text-chwe-blue">
+          <h4 className="text-xs font-bold uppercase tracking-wide text-ame-charcoal">
             Transcript
           </h4>
           <Button
@@ -166,23 +166,23 @@ export function TranscriptPanel({
         </div>
         <div
           ref={listRef}
-          className="h-[170px] overflow-y-auto bg-chwe-soft px-3 py-2 space-y-2"
+          className="h-[170px] overflow-y-auto bg-ame-soft px-3 py-2 space-y-2"
           aria-live="polite"
         >
           {messages.length === 0 ? (
-            <p className="text-sm text-chwe-muted py-4 text-center">
+            <p className="text-sm text-ame-muted py-4 text-center">
               Your conversation will appear here.
             </p>
           ) : (
             messages.map((m, i) => (
               <div
                 key={m.id || i}
-                className={`text-xs p-2 rounded ${m.sender === MessageSender.USER ? "bg-[#e8f3f1]" : "bg-white border border-chwe-line"}`}
+                className={`text-xs p-2 rounded ${m.sender === MessageSender.USER ? "bg-ame-mist" : "bg-white border border-ame-line"}`}
               >
-                <strong className="block text-chwe-blue mb-1">
+                <strong className="block text-ame-charcoal mb-1">
                   {m.sender === MessageSender.USER ? "You" : "Avatar"}
                 </strong>
-                <p className="whitespace-pre-wrap text-chwe-ink">{m.message}</p>
+                <p className="whitespace-pre-wrap text-ame-ink">{m.message}</p>
               </div>
             ))
           )}
@@ -192,11 +192,11 @@ export function TranscriptPanel({
         aria-label="Scenario assessment rubric"
         className="flex-1 min-h-0"
       >
-        <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-chwe-line">
-          <h4 className="text-xs font-bold uppercase tracking-wide text-chwe-blue">
+        <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-ame-line">
+          <h4 className="text-xs font-bold uppercase tracking-wide text-ame-charcoal">
             Assessment categories
           </h4>
-          <span className="text-xs text-chwe-muted">
+          <span className="text-xs text-ame-muted">
             {Object.keys(items).length ||
               report?.categories.filter((c) => c.result).length ||
               0}{" "}
@@ -205,11 +205,11 @@ export function TranscriptPanel({
         </div>
         {busy && (
           <div
-            className="px-4 py-3 border-b border-chwe-line bg-[#eef5f6]"
+            className="px-4 py-3 border-b border-ame-line bg-ame-soft"
             role="status"
             aria-live="polite"
           >
-            <div className="flex items-center gap-3 text-sm font-semibold text-chwe-blue">
+            <div className="flex items-center gap-3 text-sm font-semibold text-ame-charcoal">
               <svg
                 className="w-5 h-5 shrink-0 animate-spin"
                 viewBox="0 0 24 24"
@@ -240,7 +240,7 @@ export function TranscriptPanel({
               </span>
             </div>
             <div
-              className="mt-2 w-full h-2 bg-white border border-chwe-line rounded-full overflow-hidden"
+              className="mt-2 w-full h-2 bg-white border border-ame-line rounded-full overflow-hidden"
               role="progressbar"
               aria-valuemin={0}
               aria-valuemax={progress.total || 1}
@@ -248,13 +248,13 @@ export function TranscriptPanel({
               aria-label="Categories verified"
             >
               <div
-                className="h-full bg-[#36738C] transition-all duration-300"
+                className="h-full bg-ame-charcoal transition-all duration-300"
                 style={{
                   width: `${progress.total ? Math.round((100 * progress.completed) / progress.total) : 0}%`,
                 }}
               />
             </div>
-            <div className="mt-2 flex justify-between text-xs text-chwe-muted">
+            <div className="mt-2 flex justify-between text-xs text-ame-muted">
               <span>
                 {progress.completed} of {progress.total} categories verified
               </span>
@@ -270,7 +270,7 @@ export function TranscriptPanel({
             {error}
           </p>
         )}
-        <div className="divide-y divide-chwe-line">
+        <div className="divide-y divide-ame-line">
           {spec?.categories.map((category, i) => {
             const finding =
               report?.categories.find((c) => c.id === category.id)?.result ??
@@ -278,10 +278,10 @@ export function TranscriptPanel({
             return (
               <article key={category.id} className="px-4 py-3">
                 <div className="flex items-start justify-between gap-2">
-                  <h5 className="text-sm font-bold text-chwe-ink">
+                  <h5 className="text-sm font-bold text-ame-ink">
                     {i + 1}. {category.title}
                   </h5>
-                  <span className="text-[10px] font-bold uppercase text-chwe-muted text-right shrink-0">
+                  <span className="text-[10px] font-bold uppercase text-ame-muted text-right shrink-0">
                     {finding
                       ? `${finding.score}/3 — ${finding.status.replaceAll("_", " ")}`
                       : attempt.current.errors[category.id]
@@ -293,7 +293,7 @@ export function TranscriptPanel({
                 </div>
                 {!finding ? (
                   <div>
-                    <p className="text-xs text-chwe-muted mt-1">
+                    <p className="text-xs text-ame-muted mt-1">
                       Look-fors: {category.lookFors.join(" · ")}
                     </p>
                     {attempt.current.errors[category.id] && (
@@ -303,18 +303,18 @@ export function TranscriptPanel({
                     )}
                   </div>
                 ) : (
-                  <div className="mt-2 space-y-2 text-xs text-chwe-ink">
+                  <div className="mt-2 space-y-2 text-xs text-ame-ink">
                     <p>
                       <strong>Strength:</strong> {finding.strength}
                     </p>
                     {finding.evidence.map((e, j) => (
                       <blockquote
                         key={`${e.turnId}-${j}`}
-                        className="border-l-[3px] border-chwe-green bg-chwe-soft px-3 py-2"
+                        className="border-l-[3px] border-ame-gold bg-ame-soft px-3 py-2"
                       >
                         “{e.quote}”
                         {e.role === "avatar" && (
-                          <span className="block text-chwe-muted mt-1">
+                          <span className="block text-ame-muted mt-1">
                             Avatar response
                           </span>
                         )}
@@ -333,7 +333,7 @@ export function TranscriptPanel({
           })}
         </div>
       </section>
-      <footer className="px-4 py-3 flex flex-wrap gap-2 border-t border-chwe-line bg-chwe-soft">
+      <footer className="px-4 py-3 flex flex-wrap gap-2 border-t border-ame-line bg-ame-soft">
         {!live &&
           messages.length > 0 &&
           !busy &&
@@ -353,7 +353,11 @@ export function TranscriptPanel({
           </Button>
         )}
         {report && (
-          <p className="w-full text-sm font-bold text-chwe-ink">{report.complete ? `AME total: ${report.totalScore}/27 — ${report.performanceBand}` : "Partial AME assessment — no overall score"}</p>
+          <p className="w-full text-sm font-bold text-ame-ink">
+            {report.complete
+              ? `AME total: ${report.totalScore}/27 — ${report.performanceBand}`
+              : "Partial AME assessment — no overall score"}
+          </p>
         )}
         {report && (
           <Button
@@ -369,7 +373,7 @@ export function TranscriptPanel({
           </Button>
         )}
         {live && (
-          <p className="text-xs text-chwe-muted">
+          <p className="text-xs text-ame-muted">
             Select <strong>End Conversation</strong> beneath the avatar when
             finished.
           </p>

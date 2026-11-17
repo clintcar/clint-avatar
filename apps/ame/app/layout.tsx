@@ -6,8 +6,7 @@ import SiteFooter from "../src/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: {
-    default:
-      "AME Feedback Practice | CU Anschutz",
+    default: "Live Avatars & Scenarios | CU Anschutz Medical Campus",
     template: `%s | CU Anschutz Academy of Medical Educators`,
   },
   description:
@@ -21,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-white text-chwe-ink font-sans flex flex-col">
+      <body className="min-h-screen bg-white text-ame-ink font-sans flex flex-col">
         <a className="skip-link" href="#main">
           Skip to conversation
         </a>
@@ -31,14 +30,17 @@ export default function RootLayout({
         </main>
         <SiteFooter />
 
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-XH3R6KN28W" strategy="afterInteractive" />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-XH3R6KN28W"
+          strategy="afterInteractive"
+        />
         <Script id="xr-google-analytics" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-XH3R6KN28W', { project_id: 'ame' });`}
         </Script>
-</body>
+      </body>
     </html>
   );
 }

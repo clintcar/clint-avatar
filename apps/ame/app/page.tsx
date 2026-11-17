@@ -1,5 +1,5 @@
-import { PubHealthExperience } from "../src/components/PubHealthExperience";
+import { AmeExperience } from "../src/components/AmeExperience";
 
 export default function Home() {
-  return <PubHealthExperience />;
+  return <AmeExperience />;
 }

@@ -1,10 +1,10 @@
 import type { VerifiedReport } from "./verifiedAssessment";
 
-const TEAL = [0, 106, 134] as const,
-  GREEN = [122, 154, 45] as const,
-  INK = [35, 35, 35] as const,
-  MUTED = [95, 102, 107] as const,
-  PALE = [244, 246, 246] as const;
+const CHARCOAL = [34, 34, 34] as const,
+  GOLD = [207, 184, 124] as const,
+  INK = [37, 37, 37] as const,
+  MUTED = [96, 96, 96] as const,
+  PALE = [245, 245, 244] as const;
 const clean = (s: string) =>
   String(s ?? "")
     .replace(/[“”]/g, '"')
@@ -52,20 +52,20 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
     space(14);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(size);
-    color(TEAL);
+    color(CHARCOAL);
     doc.text(clean(label), left, y);
     y += 9;
   };
-  fill(TEAL);
+  fill(CHARCOAL);
   doc.rect(0, 0, 210, 16, "F");
-  fill(GREEN);
+  fill(GOLD);
   doc.rect(0, 16, 210, 1.7, "F");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   color([255, 255, 255]);
   doc.text("CU ANSCHUTZ  |  ACADEMY OF MEDICAL EDUCATORS", left, 10.5);
   head("Conversation Assessment Report", 17);
-  txt(report.projectTitle, 11, 171, left, TEAL);
+  txt(report.projectTitle, 11, 171, left, CHARCOAL);
   txt("Scenario: " + report.avatarName, 10);
   txt(
     "Generated: " + new Date(report.generatedAt).toLocaleString(),
@@ -78,7 +78,7 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
   doc.roundedRect(left, y - 3, 174, 19, 2, 2, "F");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
-  color(TEAL);
+  color(CHARCOAL);
   doc.text(
     report.complete
       ? "All assessment categories verified"
@@ -99,7 +99,9 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
   );
   y += 23;
   txt(
-    report.complete ? `AME score: ${report.totalScore}/27 — ${report.performanceBand}. Each criterion is scored 1 (not done), 2 (attempted), or 3 (successful). Evidence quotes are checked against educator speech.` : "Partial assessment: overall score withheld until all nine AME categories are verified.",
+    report.complete
+      ? `AME score: ${report.totalScore}/27 — ${report.performanceBand}. Each criterion is scored 1 (not done), 2 (attempted), or 3 (successful). Evidence quotes are checked against educator speech.`
+      : "Partial assessment: overall score withheld until all nine AME categories are verified.",
     9,
     173,
     left,
@@ -108,7 +110,7 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
   head("Rubric assessment", 14);
   for (const [i, c] of report.categories.entries()) {
     space(23);
-    fill(TEAL);
+    fill(CHARCOAL);
     doc.roundedRect(left, y - 6, 174, 12, 1.5, 1.5, "F");
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9.4);
@@ -127,7 +129,9 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
           ? "NOT OBSERVED"
           : "NOT ASSESSABLE";
     doc.setFontSize(7);
-    doc.text(c.result ? `${c.result.score}/3` : status, right - 4, y + 1, { align: "right" });
+    doc.text(c.result ? `${c.result.score}/3` : status, right - 4, y + 1, {
+      align: "right",
+    });
     y += 12;
     txt("Look-fors: " + c.lookFors.join("; "), 8, 169, left + 2, MUTED, 1.35);
     if (!c.result) {
@@ -143,7 +147,7 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
     }
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
-    color(TEAL);
+    color(CHARCOAL);
     space(7);
     doc.text("Strength", left + 2, y);
     y += 5;
@@ -156,7 +160,7 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
       space(h + 3);
       fill(PALE);
       doc.roundedRect(left + 2, y - 3, 170, h, 1.5, 1.5, "F");
-      fill(GREEN);
+      fill(GOLD);
       doc.rect(left + 2, y - 3, 1.5, h, "F");
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9);
@@ -166,14 +170,14 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
     }
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
-    color(TEAL);
+    color(CHARCOAL);
     space(7);
     doc.text("Opportunity for improvement", left + 2, y);
     y += 5;
     txt(c.result.improvement, 9.2, 167, left + 2);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
-    color(TEAL);
+    color(CHARCOAL);
     space(7);
     doc.text("Next practice step", left + 2, y);
     y += 5;
@@ -210,7 +214,7 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
     doc.roundedRect(left, y - 4, 174, h, 2, 2, "F");
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
-    color(TEAL);
+    color(CHARCOAL);
     doc.text(t.id + "  " + label, left + 5, y + 1);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8.8);
@@ -221,7 +225,7 @@ export async function downloadVerifiedReport(report: VerifiedReport) {
   const pages = doc.getNumberOfPages();
   for (let n = 1; n <= pages; n++) {
     doc.setPage(n);
-    fill(GREEN);
+    fill(GOLD);
     doc.rect(left, 282, 174, 0.6, "F");
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);

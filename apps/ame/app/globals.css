@@ -3,19 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --chwe-blue: #006a86;
-  --chwe-blue-dark: #004f66;
-  --chwe-blue-deep: #173b4a;
-  --chwe-green: #7a9a2d;
-  --chwe-green-dark: #617d20;
-  --ink: #232323;
-  --muted: #5f666b;
-  --line: #d8dde0;
-  --soft: #f4f6f6;
-  --white: #ffffff;
-  --shadow: 0 12px 30px rgba(20, 48, 60, 0.1);
-  --radius: 4px;
-  --content: 1240px;
+  --ame-black: #090909;
+  --ame-charcoal: #222;
+  --ame-gold: #cfb87c;
+  --ame-ink: #252525;
+  --ame-muted: #606060;
+  --ame-line: #dedede;
+  --ame-panel: #f0f1f1;
+  --ame-soft: #f5f5f4;
+  --ame-mist: #f4f3ef;
 }
 
 html {
@@ -24,8 +20,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--white);
-  color: var(--ink);
+  background: #fff;
+  color: var(--ame-ink);
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
@@ -33,12 +29,12 @@ body {
 }
 
 a {
-  color: var(--chwe-blue);
+  text-underline-offset: 3px;
 }
 
-a:hover,
-a:focus {
-  color: var(--chwe-blue-dark);
+:where(button, a, summary):focus-visible {
+  outline: 3px solid var(--ame-gold);
+  outline-offset: 3px;
 }
 
 .skip-link {
@@ -56,14 +52,14 @@ a:focus {
   width: auto;
   height: auto;
   padding: 0.7rem 1rem;
-  background: var(--white);
-  color: var(--ink);
+  background: #fff;
+  color: var(--ame-ink);
   z-index: 9999;
-  border: 2px solid var(--chwe-blue);
+  border: 2px solid var(--ame-charcoal);
 }
 
-.chwe-shell {
-  width: min(calc(100% - 40px), var(--content));
+.ame-shell {
+  width: min(calc(100% - 40px), 1120px);
   margin: 0 auto;
 }
 
@@ -78,7 +74,7 @@ a:focus {
   width: 100%;
   max-width: 600px;
   aspect-ratio: 16 / 9;
-  border: 1px solid var(--line);
+  border: 1px solid var(--ame-line);
 }
 
 .avatar-embed-button {
@@ -92,13 +88,13 @@ a:focus {
   cursor: pointer;
   border: 0;
   border-radius: 3px;
-  background: var(--chwe-blue);
-  color: var(--white);
+  background: var(--ame-charcoal);
+  color: #fff;
 }
 
 .avatar-embed-button:hover,
 .avatar-embed-button:focus {
-  background: var(--chwe-blue-dark);
+  background: var(--ame-black);
 }
 
 .avatar-embed:fullscreen {
@@ -125,31 +121,7 @@ a:focus {
 }
 
 @media (max-width: 520px) {
-  .chwe-shell {
-    width: min(calc(100% - 28px), var(--content));
+  .ame-shell {
+    width: min(calc(100% - 28px), 1120px);
   }
-}
-
-/* Keep the room-size QR code visible beside the conversations, without covering controls. */
-@media (min-width: 1100px) {
-  .pubhealth-content {
-    width: min(calc(100% - 40px), 1600px);
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 340px;
-    gap: 28px;
-    align-items: start;
-  }
-  .pubhealth-qr-rail {
-    position: sticky;
-    top: 24px;
-    align-self: start;
-  }
-}
-@media (max-width: 1099px) {
-  .pubhealth-qr-rail {
-    display: none;
-  }
-}
-html:has(:fullscreen) .pubhealth-qr-rail {
-  display: none;
 }
