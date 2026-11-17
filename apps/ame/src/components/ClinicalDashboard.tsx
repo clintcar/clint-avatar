@@ -283,7 +283,7 @@ export function TranscriptPanel({
                   </h5>
                   <span className="text-[10px] font-bold uppercase text-chwe-muted text-right shrink-0">
                     {finding
-                      ? finding.status.replaceAll("_", " ")
+                      ? `${finding.score}/3 — ${finding.status.replaceAll("_", " ")}`
                       : attempt.current.errors[category.id]
                         ? "Review error"
                         : busy
@@ -351,6 +351,9 @@ export function TranscriptPanel({
           >
             Cancel review
           </Button>
+        )}
+        {report && (
+          <p className="w-full text-sm font-bold text-chwe-ink">{report.complete ? `AME total: ${report.totalScore}/27 — ${report.performanceBand}` : "Partial AME assessment — no overall score"}</p>
         )}
         {report && (
           <Button
